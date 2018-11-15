@@ -3,7 +3,7 @@ export default [{
   icon: 'home',
   path: '/'
 }, {
-  text: '日志管理',
+  text: '开发日志',
   icon: 'log',
   path: '/log'
 }]

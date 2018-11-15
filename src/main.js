@@ -12,9 +12,9 @@ Vue.use(ElementUI)
 Vue.use(inject)
 
 Vue.config.productionTip = false
-window.global = {}
-global.vbus = new Vue()
-global.vm = new Vue({
+window.$variable = {}
+window.$variable.vbus = new Vue()
+window.$variable.vm = new Vue({
   el: '#app',
   router,
   store,

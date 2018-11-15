@@ -1,6 +1,6 @@
 <template>
   <div class="log">
-    <div style="margin-top: 15px;">
+    <div style="margin-top: 15px;" v-auth="'log/developmentOtherAdd'">
       <el-input placeholder="请输入标题" v-model="title"></el-input>
       <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 2}" placeholder="请输入描述"  v-model="description">
       </el-input>
@@ -10,7 +10,7 @@
     <timeline class="time-line">
       <template v-for="item in listData">
         <timeline-title :key="item.id">
-          <div class="title" @dblclick="detail(item)">{{item.title}} <small>({{item.created_at}})</small></div>
+          <strong :class="['title', isUpdateAuth ? 'hand' : '']" @click="detail(item)">{{item.title}} <small>({{item.created_at}})</small></strong>
         </timeline-title>
         <div class="description" v-if="item.description" :key="item.id+'b'">{{item.description}}</div>
         <timeline-item color="#9dd8e0" :key="item.id+'a'">
@@ -34,7 +34,8 @@ export default {
       listData: [],
       page: 0,
       isLoading: false,
-      loadData: true
+      loadData: true,
+      isUpdateAuth: this.$auth.includes('/api/admin/log/developmentOtherUpdate')
     }
   },
   components: {
@@ -70,6 +71,7 @@ export default {
         })
     },
     detail (item) {
+      if (!this.isUpdateAuth) return
       this.title = item.title
       this.content = item.content
       this.id = item.id
@@ -148,8 +150,11 @@ ul {
   text-align: center;
 }
 .title {
-  user-select: none;
-  cursor: pointer;
+  cursor: default;
+  &.hand{
+    user-select: none;
+    cursor: pointer;
+  }
 }
 .description{
   font-size: 14px;

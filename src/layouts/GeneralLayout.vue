@@ -28,7 +28,7 @@ export default {
     headerNavigation
   },
   mounted () {
-    global.vbus.$on('collapseLeftNav', val => {
+    window.$variable.vbus.$on('collapseLeftNav', val => {
       this.isCollapse = val
     })
   }

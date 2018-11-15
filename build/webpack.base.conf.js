@@ -40,9 +40,6 @@ module.exports = {
       'components': resolve('src/components'),
       'config': resolve('src/config'),
       'plugins': resolve('src/plugins'),
-      'routers': resolve('src/routers'),
-      'service': resolve('src/service'),
-      'store': resolve('src/store'),
       'utils': resolve('src/utils'),
       'views': resolve('src/views'),
       'layouts': resolve('src/layouts')

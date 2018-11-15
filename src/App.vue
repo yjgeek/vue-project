@@ -19,7 +19,7 @@ export default {
         let $route = this.$route
         let layout = $route.meta.layout || 'general'
         this.currentLayout = layouts[`${layout}-layout`]
-        global.vbus.$emit('updateRouter', $route)
+        window.$variable.vbus.$emit('updateRouter', $route)
       },
       immediate: true
     }

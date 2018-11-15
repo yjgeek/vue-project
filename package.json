@@ -16,7 +16,6 @@
     "lodash": "^4.17.10",
     "vue": "^2.5.2",
     "vue-cute-timeline": "^1.2.8",
-    "vue-directive-image-previewer": "^2.2.1",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

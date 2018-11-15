@@ -35,7 +35,7 @@ export default {
     collapse () {
       // 通过全局的vbus来分发事件
       this.isShowSide = !this.isShowSide
-      global.vbus.$emit('collapseLeftNav', this.isShowSide)
+      window.$variable.vbus.$emit('collapseLeftNav', this.isShowSide)
     },
     /**
      * 窗口改变大小
@@ -44,10 +44,10 @@ export default {
       this.$store.commit('updateWindowSize', window.innerWidth)
       if (window.innerWidth > 991) {
         this.isShowSide = false
-        global.vbus.$emit('collapseLeftNav', false)
+        window.$variable.vbus.$emit('collapseLeftNav', false)
       } else {
         this.isShowSide = true
-        global.vbus.$emit('collapseLeftNav', true)
+        window.$variable.vbus.$emit('collapseLeftNav', true)
       }
     }
   },

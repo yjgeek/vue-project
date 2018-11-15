@@ -27,6 +27,7 @@ export function analysisParams (value, data) {
 }
 
 export const Mock = require('mockjs')
+Mock.XHR.prototype.withCredentials = true
 
 Mock.setup({
   timeout: '200-1000'

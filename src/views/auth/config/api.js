@@ -19,6 +19,14 @@ export default [{
   isMock: false,
   params: {}
 }, {
+  name: 'permissionList',
+  method: 'GET',
+  desc: '获取这个用户的全部权限',
+  path: '/common/public/permissionList',
+  mockPath: '',
+  isMock: false,
+  params: {}
+}, {
   name: 'logout',
   method: 'GET',
   desc: '退出登录',

@@ -6,8 +6,7 @@ let apiPrefix = 'http://127.0.0.1:3001/api'
 let isAuth = false
 let mock = true
 if (process.env.NODE_ENV === 'production') { // 生产环境
-  apiPrefix = 'http://0.0.0.0:4004/api'
-  mock = false
+  apiPrefix = 'http://39.107.98.143:4001/api'
   isAuth = true
 }
 export const API_PREFIX = apiPrefix

@@ -1,9 +1,7 @@
-import { AUTH_DEBUG } from 'config/index'
 export default {
-  // api验证指令
+  // 基于我自己的权限认证逻辑，如果你要用这个，可以修改成你自己的逻辑
   auth: {
-    bind (el, binding, vnode) {
-      if (!AUTH_DEBUG) return false
+    inserted (el, binding) {
       let data = binding.value
       let bool = true
       if (typeof data === 'string') {
@@ -11,7 +9,7 @@ export default {
       }
       for (let item of data.values()) {
         let val = '/api/admin/' + item
-        if (global.vm.$auth.includes(val)) {
+        if (window.$variable.vm.$auth.includes(val)) {
           bool = false
           break
         }
