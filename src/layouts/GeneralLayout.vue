@@ -6,8 +6,11 @@
             <el-main :class="['main', !isCollapse?'show-main':'hide-main']">
                 <c-breadcrumb :routes="$route.matched" />
                 <div class="main-container">
-                    <router-view />
+                    <transition name="fade">
+                        <router-view />
+                    </transition >
                 </div>
+                <c-footer />
             </el-main>
         </el-container>
     </div>
@@ -36,6 +39,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 .main {
     padding: 60px 0px 0 255px;
     width: 100vw;

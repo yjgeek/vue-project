@@ -8,5 +8,4 @@ apiData.keys().forEach(item => {
     obj[prefix] = item
   }
 })
-
 export default obj

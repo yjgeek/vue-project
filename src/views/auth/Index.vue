@@ -37,7 +37,9 @@ export default {
         this.setLocalStorage('user', res)
         // 获取当前用户的权限，如果不需要的话可以去除掉
         this.$api['authPermissionList']().then(res => {
-          this.setLocalStorage('auth', Object.keys(res).filter(val => res[val] === '1'))
+          const auth = Object.keys(res).filter(val => res[val] === '1')
+          window.$variable.vm.$auth = auth
+          this.setLocalStorage('auth', auth)
           this.$router.push('/welcome')
         })
       }).catch(e => {

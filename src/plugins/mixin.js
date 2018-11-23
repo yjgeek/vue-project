@@ -2,6 +2,7 @@ import Icon from 'components/IconFont'
 import StrongDialog from 'components/strongDialog'
 import StrongList from 'components/strongList'
 import CBreadcrumb from 'components/Breadcrumb'
+import CFooter from 'components/Footer'
 export default {
   data () {
     return {
@@ -64,6 +65,7 @@ export default {
     Icon,
     StrongList,
     StrongDialog,
-    CBreadcrumb
+    CBreadcrumb,
+    CFooter
   }
 }

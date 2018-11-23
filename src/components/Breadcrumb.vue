@@ -72,6 +72,7 @@ export default {
         border: 1px solid #eaeaea;
         padding-left: 15px;
         box-sizing: border-box;
+        overflow: hidden;
         .breadcrumb-a {
             cursor: pointer;
             &:hover {

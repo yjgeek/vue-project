@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@antv/data-set": "^0.10.1",
+    "@antv/g2": "^3.3.4",
     "axios": "^0.17.1",
     "element-ui": "^2.0.9",
     "lodash": "^4.17.10",

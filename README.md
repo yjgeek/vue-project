@@ -2,6 +2,12 @@
 
 > 一个大杂烩的项目,里面的内容想到什么就写什么，比如尝试vue的一些特性, 还有一些好玩的插件等等，如果感兴趣的话，欢迎Fork！
 
+线上地址:
+[http://vue.yjgeek.com](http://vue.yjgeek.com)
+
+账号: vue-test
+密码: 123456
+
 <small>这个项目是的架构是基于我另外一个模板搞的[vue-cli2的一个后台管理框架](https://github.com/yuanjie007/element-admin)</small>，感兴趣的话可以去耍耍，我根据这个项目的一些特殊性又重新调整了下，下面我就来说下整体的一个架构吧
 
 ```json
