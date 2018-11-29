@@ -2,14 +2,24 @@ import api from './api'
 import * as config from 'config/index'
 import mixin from './mixin'
 import directive from './directive'
+import db from './db'
 import 'src/mocks'
+import tableModel from 'src/tables'
 export default {
   install: (Vue) => {
     document.title = config.TITLE
     Vue.prototype.$config = config
     Vue.prototype.$api = api
     Vue.prototype.$auth = localStorage.auth ? JSON.parse(localStorage.auth) : []
-
+    Vue.prototype.$db = db
+    // 初始化数据库
+    db.initDB('db', tableModel.tables).then(res => {
+      if (!res) {
+        Object.keys(tableModel.datas).forEach(key => {
+          db.add(key, tableModel.datas[key])
+        })
+      }
+    })
     // 3. 注入组件
     Vue.mixin(mixin)
     // 注册一个全局自定义指令 `v-auth`

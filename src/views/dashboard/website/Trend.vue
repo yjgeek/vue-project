@@ -166,6 +166,10 @@ export default {
         this.keywordCloud(chart)
       })
     },
+    updateData () {
+      this.updateTrend()
+      this.updateKeywordCloud()
+    },
     totalChange () {
       this.updateTrend()
       this.updateKeywordCloud()

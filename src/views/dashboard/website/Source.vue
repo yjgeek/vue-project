@@ -36,11 +36,14 @@ export default {
     async getSourcePage () {
       let data = await this.$api['dashboardSourcePage']()
       this.entranceData = data
+    },
+    updateData () {
+      this.getSourceWebsite()
+      this.getSourcePage()
     }
   },
   created () {
-    this.getSourceWebsite()
-    this.getSourcePage()
+    this.updateData()
   }
 }
 </script>

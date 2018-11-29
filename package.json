@@ -15,6 +15,7 @@
     "@antv/g2": "^3.3.4",
     "axios": "^0.17.1",
     "element-ui": "^2.0.9",
+    "jsstore": "^2.8.2",
     "lodash": "^4.17.10",
     "vue": "^2.5.2",
     "vue-cute-timeline": "^1.2.8",
@@ -43,7 +44,7 @@
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^3.0.1",
-    "eslint-plugin-vue": "^4.0.0",
+    "eslint-plugin-vue": "^4.7.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
@@ -70,7 +71,8 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "worker-loader": "^2.0.0"
   },
   "engines": {
     "node": ">= 6.0.0",

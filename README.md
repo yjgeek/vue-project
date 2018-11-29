@@ -39,6 +39,7 @@
 │  │    │    └─router.js--------------------路由配置
 │  │    │    └─mock.js--------------------mock配置
 │  │    │    └─store.js--------------------vuex配置
+│  │    │    └─table.js--------------------indexeddb的数据表
 │  │    └─Index.vue-------------------------模块的主页
 └─static--------------------------------------------存放静态资源文件(不可变的)
 └─main.js-------------------------------------------主入口文件
@@ -46,6 +47,7 @@
 └─mocks.js-------------------------------------------全局的mock配置的入口文件
 └─router.js-----------------------------------------全局的vue-router配置的入口文件
 └─stores.js-------------------------------------------全局的vuex配置的入口文件
+└─tables.js-------------------------------------------全局的indexeddb配置的入口文件
 ```
 
 ### views目录
@@ -58,9 +60,10 @@
         │    └─router.js--------------------路由配置(不可更改)
         │    └─mock.js--------------------mock配置(不可更改)
         │    └─store.js--------------------vuex配置(不可更改)
+        │    └─table.js--------------------indexeddb配置(不可更改)
         └─index.vue--------默认模块的主页，这个名称可以改
 ```
-```config```目录下的配置文件会被```src```目录下对应的配置文件自动引入(apis, routers, mocks, stores)，所以无需手动去引入这些文件,```api.js、router.js```这两个是必须的
+```config```目录下的配置文件会被```src```目录下对应的配置文件自动引入(apis, routers, mocks, stores, tables)，所以无需手动去引入这些文件,```api.js、router.js```这两个是必须的
 
 **我这里贴下每个配置文件的代码**
 
@@ -138,5 +141,28 @@ this.$store.state.home.count
 this.$store.getters['home/add']
 this.$store.dispatch['home/login']
 this.$store.commit['home/login']
+
+```
+table.js
+```js
+export default {
+  tables: [
+    {
+      name: 'product', // 表名称
+      columns: [ //列定义 具体可查看jsstore文档: http://jsstore.net/tutorial/column/
+        {name: 'id', primaryKey: true, autoIncrement: true},
+        {name: 'itemName', notNull: true, dataType: JsStore.DATA_TYPE.String},
+        {name: 'price', notNull: true, dataType: JsStore.DATA_TYPE.Number},
+        {name: 'quantity', notNull: true,dataType: JsStore.DATA_TYPE.Number}
+      ]
+    }
+  ],
+  datas: {
+    product: [
+      {itemName: 'apple', price: 100, quantity: 1000},
+      {itemName: 'banana', price: 100, quantity: 1000}
+    ]
+  }
+}
 ```
 大致就是上面这些，其他的就直接看代码吧
