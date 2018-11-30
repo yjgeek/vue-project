@@ -17,7 +17,7 @@
 <script>
 import { debounce } from 'lodash'
 export default {
-  name: 'header-navigation',
+  name: 'c-header-navigation',
   data () {
     return {
       isShowSide: false,

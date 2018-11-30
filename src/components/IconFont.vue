@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  name: 'icon',
+  name: 'c-icon',
   props: ['type', 'rotate']
 }
 </script>

@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: 'submenu',
+  name: 'c-submenu',
   props: {
     item: Object
   },

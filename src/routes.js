@@ -1,4 +1,4 @@
-const RouterView = r => require.ensure([], () => r(require('components/RouterView')), 'routerView')
+const RouterView = r => require.ensure([], () => r(require('src/RouterView')), 'routerView')
 const Index = r => require.ensure([], () => r(require('views/index/Index')), 'index')
 const Login = r => require.ensure([], () => r(require('views/auth/Index')), 'login')
 const data = require.context('./views/', true, /router\.js$/)

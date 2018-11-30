@@ -3,10 +3,12 @@ import * as config from 'config/index'
 import mixin from './mixin'
 import directive from './directive'
 import db from './db'
-import 'src/mocks'
 import tableModel from 'src/tables'
+import components from 'components/index'
+import 'src/mocks'
 export default {
   install: (Vue) => {
+    Vue.use(components)
     document.title = config.TITLE
     Vue.prototype.$config = config
     Vue.prototype.$api = api

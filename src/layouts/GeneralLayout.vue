@@ -1,8 +1,8 @@
 <template>
     <div class="general-layout">
-        <header-navigation></header-navigation>
+        <c-header-navigation></c-header-navigation>
         <el-container>
-            <side-navigation></side-navigation>
+            <c-side-navigation></c-side-navigation>
             <el-main :class="['main', !isCollapse?'show-main':'hide-main']">
                 <c-breadcrumb :routes="$route.matched" />
                 <div class="main-container">
@@ -17,18 +17,12 @@
 </template>
 
 <script>
-import sideNavigation from 'components/sideNavigation'
-import headerNavigation from 'components/HeaderNavigation'
 export default {
   name: 'general-layout',
   data () {
     return {
       isCollapse: false
     }
-  },
-  components: {
-    sideNavigation,
-    headerNavigation
   },
   mounted () {
     window.$variable.vbus.$on('collapseLeftNav', val => {
