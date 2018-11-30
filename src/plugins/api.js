@@ -1,7 +1,7 @@
 import axios from './axios'
 import {pick, assign, isEmpty} from 'lodash'
 import {API_DEFAULT_CONFIG} from 'config/index'
-import API_CONFIG from 'src/apis'
+import globalConfigs from 'src/globalConfigs'
 class MakeApi {
   constructor (options) {
     this.api = {}
@@ -77,6 +77,6 @@ function _normoalize (options, data) {
 }
 // 注入模型和全局配置，并暴露出去
 export default new MakeApi({
-  config: API_CONFIG,
+  config: globalConfigs.apis,
   ...API_DEFAULT_CONFIG
 })['api']

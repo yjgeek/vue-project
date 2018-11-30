@@ -128,8 +128,8 @@ export const parseOption = ({ type, url, body }) => {
  */
 export const sortObj = (key) => {
   return function (obj1, obj2) {
-    var val1 = obj1[key]
-    var val2 = obj2[key]
+    var val1 = obj1[key] !== undefined ? obj1[key] : 1
+    var val2 = obj2[key] !== undefined ? obj2[key] : 1
     if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
       val1 = Number(val1)
       val2 = Number(val2)

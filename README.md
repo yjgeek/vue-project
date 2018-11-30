@@ -19,7 +19,6 @@
 │  ├─components------------------------------- 全局组件在inject.js文件注入
 │  ├─config--------------------------------------全局的一些配置
 │  │  └─index.js----------------------------------配置入口文件
-│  │  └─menu.js----------------------------------左侧导航栏的菜单
 │  │  └─interceptors-----------------------------全局的拦截器
 │  │      └─index.js-------------------------------------拦截器入口文件
 │  │      └─axios.js-------------------------------------axios拦截器
@@ -31,46 +30,47 @@
 │  │      directive.js----------------------------------全局的自定义指令
 │  │      mixin.js-----------------------------------全局的mixin,通过indect注入
 │  │      router.js-----------------------------------vue-router实例化路由
+│  │      store.js-----------------------------------vuex实例化
 │  ├─utils------------------------------------------存放一些公共的工具
 │  └─views-----------------------------------------存放的页面文件
 │  │  └─home-----------------------------------------一个home模块
-│  │    └─config-------------存放home模块的一些配置(router, api, mock)
-│  │    │    └─api.js-----------------------api接口配置
-│  │    │    └─router.js--------------------路由配置
-│  │    │    └─mock.js--------------------mock配置
-│  │    │    └─store.js--------------------vuex配置
-│  │    │    └─table.js--------------------indexeddb的数据表
+│  │    └─ _config-------------存放home模块的一些配置(router, api, mock, table, store, menu(菜单))
+│  │    │    └─index.js-----------------------api接口配置
 │  │    └─Index.vue-------------------------模块的主页
 └─static--------------------------------------------存放静态资源文件(不可变的)
 └─main.js-------------------------------------------主入口文件
 └─RouterView.vue-------------------------------------------专门用来vue-router嵌套组件
-└─apis.js-------------------------------------------全局的api配置的入口文件
-└─mocks.js-------------------------------------------全局的mock配置的入口文件
-└─router.js-----------------------------------------全局的vue-router配置的入口文件
-└─stores.js-------------------------------------------全局的vuex配置的入口文件
-└─tables.js-------------------------------------------全局的indexeddb配置的入口文件
+└─globalConfigs.js-------------------------------------------全局的配置数据(routers, apis, mocks, stores, tables, menus(菜单))
 ```
 
 ### views目录
-```views```下的第一级目录就是模块名称，比如下面的home就是叫home的模块，然后模块下面有一个```config```的文件夹，专门用来存这个模块的一些配置文件,如(api,router,mock,store)
+```views```下的第一级目录就是模块名称，比如下面的home就是叫home的模块，然后模块下面有一个```_config```的文件夹，专门用来存这个模块的一些配置文件,如(api,router, table, menu, mock,store)
 ```json
 └─views
     └─home
-        │─config
-        │    └─api.js-----------------------api接口配置(不可更改)
-        │    └─router.js--------------------路由配置(不可更改)
-        │    └─mock.js--------------------mock配置(不可更改)
-        │    └─store.js--------------------vuex配置(不可更改)
-        │    └─table.js--------------------indexeddb配置(不可更改)
+        │─ _config
+        │    └─index.js-----------------------这个文件包含(api, router, table, menu, mock, store)
         └─index.vue--------默认模块的主页，这个名称可以改
 ```
-```config```目录下的配置文件会被```src```目录下对应的配置文件自动引入(apis, routers, mocks, stores, tables)，所以无需手动去引入这些文件,```api.js、router.js```这两个是必须的
+```_config```目录下的配置文件会被```src/globalConfigs.js```自动解析出来变成:
 
-**我这里贴下每个配置文件的代码**
-
-api.js
 ```js
-export default [{
+{
+  apis: {}
+  mocks: {}
+  routers: []
+  menus: []
+  stores: {}
+  tables: {schemas: [], datas: {}}
+}
+```
+
+**我这里贴下每个配置的代码**
+```js
+// api(Object | Array) ----------------------------------------------------------
+
+// Array
+[{
   name: 'index',
   method: 'GET',
   desc: '登录',
@@ -80,31 +80,48 @@ export default [{
   params: {
   }
 }]
-// 调用 模块名称(比如上面的是home) + api的name,最后采用小驼峰写法，homeIndex
+// Object
+{
+  prefix: 'index', // api的前缀默认是模块名
+  data: [{
+    name: 'index',
+    method: 'GET',
+    desc: '登录',
+    path: '/admin/user/index',
+    mockPath: '',
+    isMock: true, //这个接口是否用mock来模拟数据，不需要设为false,默认true
+    params: {
+    }
+  }]
+}
+// Array 调用 模块名称(比如上面的是home) + api的name,最后采用小驼峰写法，homeIndex
 this.$api['homeIndex']({}).then(res => {}).catch(err => {})
-```
-router.js
-```js
+// Object调用 模块名称(比如上面的是home) + api的name,最后采用小驼峰写法，homeIndex
+this.$api['IndexIndex']({}).then(res => {}).catch(err => {})
+
+// router api(Object | Array) ----------------------------------------------------------
 const Home = r => require.ensure([], () => r(require('../Index')), 'home')
-export default {
+{
   path: '/home',
   name: 'home',
   component: Home,
+  _index: 0, // 路由的排序，数字越小，则越先匹配
   meta: {
     // 面包屑导航，String和Object 如果是Object： text: 显示的文字, url：对应路由的name, params: 需要传的参数
-    bread: ['首页', {text: '列表', url: 'home', params: {id: 1}}]
+    bread: ['首页', {text: '列表', url: 'home', params: {id: 1}}],
+    layout: 'general' //组件选用布局
   }
 }
-```
-mock.js
-```js
+
+// mock ----------------------------------------------------------
+
 import { resSend, resSendList, Mock, parseOption } from 'utils/index'
 // resSend 返回接口的方法，可以返回统一格式的数据，建议全部都采用这个方法返回
 // resSendList 返回列表数据的方法，可以返回带有分页、总页等等统一格式的数据，建议列表都采用这个方法返回
 // Mock Mock的实例化方法
 // parseOption 解析mock template的回调方法的options参数
 // 以上方法详情请看代码
-export default {
+{
   // 如果这个路由是用get的话，后面一定要加?.*不然匹配不到， 其他的就是mock的配置了，就直接看文档吧
   '/admin/user/index?.*': {
     type: 'get',
@@ -125,11 +142,10 @@ export default {
     })
   }
 }
-```
-store.js
-```js
-export default {
+// store  ----------------------------------------------------------
+{
   namespaced: true,
+  prefix: '', //vuex模块的命名空间默认是模块名字
   state: { count: 0 },
   getter: { add () {} },
   mutation: { login () {} },
@@ -143,11 +159,9 @@ this.$store.getters['home/add']
 this.$store.dispatch['home/login']
 this.$store.commit['home/login']
 
-```
-table.js
-```js
-export default {
-  tables: [
+// table ----------------------------------------------------------
+{
+  schemas: [
     {
       name: 'product', // 表名称
       columns: [ //列定义 具体可查看jsstore文档: http://jsstore.net/tutorial/column/
@@ -165,5 +179,29 @@ export default {
     ]
   }
 }
+
+// menu (Array | Object) ----------------------------------------------------------
+{
+  text: '首页',
+  icon: 'home',
+  path: '/',
+  _index: 0 // 菜单的顺序，数字越小，则越靠前
+}
+```
+
+## index.js的目录结构
+> 因为放在一起这个文件可能会很大，所以建议可以拆分下文件，比如: api、mock这些拆成单个文件，然后引入进来
+
+```js
+export default {
+  api: [],
+  mock: {},
+  router: {},
+  store: {},
+  table: {
+    schemas: [],
+    datas: {}
+  }
+} 
 ```
 大致就是上面这些，其他的就直接看代码吧

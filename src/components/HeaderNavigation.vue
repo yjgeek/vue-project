@@ -1,6 +1,6 @@
 <template>
   <el-header :class="['header-navigation', isShowSide?'hide-nav':'show-nav']">
-    <div class="logo" @click="collapse"><icon :type="isShowSide?'fold-right':'fold-left'"></icon></div>
+    <div class="logo" @click="collapse"><c-icon :type="isShowSide?'fold-right':'fold-left'"></c-icon></div>
     <div class="right">
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">

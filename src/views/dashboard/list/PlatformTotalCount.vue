@@ -2,7 +2,7 @@
     <el-row :gutter="12" class="platform">
         <el-col :lg="6" :sm="12" :xs="24" v-for="(item, i) in data" :key="i" style="margin-bottom: 12px">
             <el-card shadow="always">
-                <icon :type="item.icon" :style="{background: item.color}"/>
+                <c-icon :type="item.icon" :style="{background: item.color}"/>
                 <div>
                     <strong>{{item.title}}</strong>
                     <p style="margin-top: 10px"><font>￥{{item.total}}</font>亿</p>

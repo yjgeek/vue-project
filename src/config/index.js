@@ -1,4 +1,4 @@
-import menu from './menu'
+import globalConfigs from 'src/globalConfigs'
 // 网站标题
 export const TITLE = '后台管理系统'
 
@@ -31,7 +31,7 @@ export const API_DEFAULT_CONFIG = {
 }
 
 // 侧边栏导航菜单配置
-export const SIDE_NAV_MENU = menu
+export const SIDE_NAV_MENU = globalConfigs.menus
 
 // 是否开启权限认证
 export const AUTH_DEBUG = isAuth

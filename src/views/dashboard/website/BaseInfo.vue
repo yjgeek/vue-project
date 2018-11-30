@@ -14,15 +14,15 @@
                 <span>{{key | toMapKeys }}</span>
                 <span>
                   {{item.pv}}
-                  <font v-if="key === 'predictionToday'"><icon type="arrow-solid" :rotate="item.pv>nowData.today.pv ? 0 : -180" /></font>
+                  <font v-if="key === 'predictionToday'"><c-icon type="arrow-solid" :rotate="item.pv>nowData.today.pv ? 0 : -180" /></font>
                 </span>
                 <span>
                   {{item.uv}}
-                  <font v-if="key === 'predictionToday'"><icon type="arrow-solid" :rotate="item.uv>nowData.today.uv ? 0 : -180" /></font>
+                  <font v-if="key === 'predictionToday'"><c-icon type="arrow-solid" :rotate="item.uv>nowData.today.uv ? 0 : -180" /></font>
                 </span>
                 <span>
                   {{item.ip}}
-                  <font v-if="key === 'predictionToday'"><icon type="arrow-solid" :rotate="item.ip>nowData.today.ip ? 0 : -180" /></font>
+                  <font v-if="key === 'predictionToday'"><c-icon type="arrow-solid" :rotate="item.ip>nowData.today.ip ? 0 : -180" /></font>
                 </span>
                 <span>{{item.target.toFixed(2)}}%</span>
                 <span>{{item.time}}</span>
@@ -44,7 +44,7 @@
         </transition>
         <div class="tbody-footer">
             <div class="table">
-                <div class="arrow" @click="isShowYesterday = !isShowYesterday"><icon type="double-arrow-right" :rotate="isShowYesterday ? -90 : 90" /></div>
+                <div class="arrow" @click="isShowYesterday = !isShowYesterday"><c-icon type="double-arrow-right" :rotate="isShowYesterday ? -90 : 90" /></div>
             </div>
         </div>
     </div>
