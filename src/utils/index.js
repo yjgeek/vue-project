@@ -1,5 +1,9 @@
 import { isArray, isObject } from 'lodash'
-// 解析带有#{}的内容
+/**
+ * 解析带有#{}的内容
+ * @param {*} value 需要解析的数据
+ * @param {Object} data 替换的数据源
+ */
 export function analysisParams (value, data) {
   let isJson = false
   if (isArray(value) || isObject(value)) {
@@ -117,4 +121,25 @@ export const parseOption = ({ type, url, body }) => {
     obj['params'] = body
   }
   return obj
+}
+/**
+ * Array根据Object的某个key进去排序
+ * @param {String} key 要排序的key
+ */
+export const sortObj = (key) => {
+  return function (obj1, obj2) {
+    var val1 = obj1[key]
+    var val2 = obj2[key]
+    if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
+      val1 = Number(val1)
+      val2 = Number(val2)
+    }
+    if (val1 < val2) {
+      return -1
+    } else if (val1 > val2) {
+      return 1
+    } else {
+      return 0
+    }
+  }
 }

@@ -4,14 +4,14 @@
       <img src="https://cn.vuejs.org/images/logo.png" alt=""> {{!isCollapse?$config.TITLE:''}}
     </div>
     <el-menu :default-active="$route.path" :router="true" :collapse="isCollapse" class="el-menu-vertical" background-color="#001529" text-color="#fff" active-text-color="#1890ff">
-      <submenu v-for="(item, i) in sidebarData" :key="i" :item="item" />
+      <c-submenu v-for="(item, i) in sidebarData" :key="i" :item="item" />
     </el-menu>
   </el-aside>
 </template>
 <script>
-import submenu from './Submenu'
+import cSubmenu from './Submenu'
 export default {
-  name: 'side-navigation',
+  name: 'c-side-navigation',
   data () {
     return {
       isCollapse: false
@@ -23,7 +23,7 @@ export default {
     }
   },
   components: {
-    submenu
+    cSubmenu
   },
   methods: {
     /**
