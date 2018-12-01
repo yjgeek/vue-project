@@ -6,6 +6,7 @@ export default {
   menu: {
     text: '开发日志',
     icon: 'log',
-    path: '/log'
+    path: '/log',
+    _index: 100000
   }
 }

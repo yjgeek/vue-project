@@ -57,7 +57,7 @@ contexts.keys().forEach(item => {
       }
     }
   } catch (err) {
-    console.info('解析出错!')
+    console.info(err, '全局配置解析出错!')
   }
 })
 routers = routers.sort(sortObj('_index'))

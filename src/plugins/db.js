@@ -111,9 +111,6 @@ class DB {
     let page = where.page
     delete where.limit
     delete where.page
-    if (JSON.stringify(where) === '{}') {
-      where = null
-    }
     let skip = (page - 1) * limit
     let baseOther = {}
     baseOther['order'] = {
@@ -122,11 +119,40 @@ class DB {
     }
     other = {...baseOther, ...other, skip, limit}
     let obj = {}
+    where = this.filterWhere(where)
     obj['data'] = await this.connent.select({from: table, ...other, where})
     obj['totalCount'] = await this.connent.count({from: table, where})
     obj['totalPage'] = Math.ceil(obj['totalCount'] / limit)
-    obj['page'] = page
-    return obj
+    obj['page'] = Number(page)
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(obj)
+      }, 1000)
+    })
+  }
+
+  filterWhere (where) {
+    if (where && typeof where === 'object') {
+      Object.keys(where).forEach(key => {
+        let item = where[key]
+        let val = item
+        if (key === 'or') {
+          let data = this.filterWhere(item)
+          if (!data) {
+            val = ''
+          }
+        } else if (typeof item === 'object') {
+          val = Object.values(item)[0]
+        }
+        if (!val) {
+          delete where[key]
+        }
+      })
+    }
+    if (JSON.stringify(where) === '{}') {
+      where = null
+    }
+    return where
   }
 }
 export default new DB()
