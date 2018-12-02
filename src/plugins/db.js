@@ -98,6 +98,30 @@ class DB {
     })
     return res
   }
+
+  /**
+   * 默认根据主键查找数据
+   * @param {String} table 表名称 required
+   * @param {Object | Number} where 查询条件
+   * @param {Object} other 查询函数比如: limit、order by、group by
+   * @return {Promise} {} 成功返回查询出来的数据
+   */
+  async find (table, where = null, other = {}) {
+    if (!this.connent) await this.initDB()
+    if (typeof where === 'number') {
+      let id = where
+      where = { id }
+    }
+    let res = await this.connent.select({
+      from: table,
+      where,
+      ...other
+    })
+    if (res[0]) {
+      return res[0]
+    }
+    return {}
+  }
   /**
    * 自定义分页函数
    * @param {String} table 表名称 required

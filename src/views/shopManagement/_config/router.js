@@ -1,6 +1,7 @@
 const shopManagement = r => require.ensure([], () => r(require('../Index')), 'shop')
 const RouterView = r => require.ensure([], () => r(require('src/RouterView')), 'shop')
 const CategoryIndex = r => require.ensure([], () => r(require('../product/category/Index')), 'shop')
+const CategoryAddEditView = r => require.ensure([], () => r(require('../product/category/children/AddEditView')), 'shop')
 export default {
   path: '/shop',
   name: 'shop',
@@ -19,11 +20,28 @@ export default {
       children: [
         {
           path: 'category',
-          name: 'category',
+          name: 'shopCategory',
           component: CategoryIndex,
           meta: {
             bread: ['分类列表']
-          }
+          },
+          children: [
+            {
+              path: 'add',
+              name: 'shopCategoryAdd',
+              component: CategoryAddEditView,
+              meta: {
+                bread: ['分类添加']
+              }
+            }, {
+              path: 'edit',
+              name: 'shopCategoryEdit',
+              component: CategoryAddEditView,
+              meta: {
+                bread: ['分类更改']
+              }
+            }
+          ]
         }
       ]
     }
