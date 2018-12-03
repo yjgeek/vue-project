@@ -28,21 +28,10 @@
         style="width: 100%"
       >
         <el-table-column
-          type="index"
-          label="编号"
-          width="50"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="分类名称"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="create_time"
-          label="创建时间"
-        >
-        </el-table-column>
+          v-for="item in columns"
+          :key="item.id"
+          v-bind="item"
+        />
         <el-table-column
           label="操作"
           width="250"
@@ -71,6 +60,7 @@ export default {
   name: 'shop-product-category',
   data () {
     return {
+      columns: [{type: 'index', label: '编号', width: 50}, {prop: 'name', label: '分类名称'}, {prop: 'pname', label: '父级分类'}, {prop: 'create_time', label: '创建时间'}, {prop: 'update_time', label: '更改时间'}],
       filterParams: {
         name: ''
       }
@@ -83,6 +73,11 @@ export default {
         params.name = { like: params.name + '%' }
       }
       this.$db.page('shopCategory', params).then(res => {
+        res.data = res.data.map(item => {
+          item.pname = ''
+          this.getParent(item)
+          return item
+        })
         cb(res)
       })
     },
@@ -94,6 +89,13 @@ export default {
     },
     updateData () {
       this.$refs.list.updateData()
+    },
+    async getParent (item) {
+      if (item.pid) {
+        let res = await this.$db.find('shopCategory', item.pid, null, 0)
+        item.pname = res.name ? res.name : ''
+      }
+      return ''
     }
   },
   created () {}

@@ -42,6 +42,22 @@ export default {
               }
             }
           ]
+        },
+        {
+          path: 'good',
+          name: 'shopGood',
+          component: CategoryIndex,
+          meta: {
+            bread: ['商品列表']
+          }
+        },
+        {
+          path: 'goodAdd',
+          name: 'shopGoodAdd',
+          component: CategoryIndex,
+          meta: {
+            bread: ['商品列表']
+          }
         }
       ]
     }
