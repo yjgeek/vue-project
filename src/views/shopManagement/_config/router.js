@@ -1,5 +1,7 @@
 const shopManagement = r => require.ensure([], () => r(require('../Index')), 'shop')
 const RouterView = r => require.ensure([], () => r(require('src/RouterView')), 'shop')
+const GoodIndex = r => require.ensure([], () => r(require('../product/Index')), 'shop')
+const GoodAddEditView = r => require.ensure([], () => r(require('../product/AddEditView')), 'shop')
 const CategoryIndex = r => require.ensure([], () => r(require('../product/category/Index')), 'shop')
 const CategoryAddEditView = r => require.ensure([], () => r(require('../product/category/children/AddEditView')), 'shop')
 export default {
@@ -46,7 +48,7 @@ export default {
         {
           path: 'good',
           name: 'shopGood',
-          component: CategoryIndex,
+          component: GoodIndex,
           meta: {
             bread: ['商品列表']
           }
@@ -54,9 +56,9 @@ export default {
         {
           path: 'goodAdd',
           name: 'shopGoodAdd',
-          component: CategoryIndex,
+          component: GoodAddEditView,
           meta: {
-            bread: ['商品列表']
+            bread: [{text: '商品列表', url: 'shopGood'}, '商品添加']
           }
         }
       ]

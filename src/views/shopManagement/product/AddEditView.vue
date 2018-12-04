@@ -1,5 +1,5 @@
 <template>
-  <c-strong-dialog v-model="visible" @submit="submit" backUrl="shopCategory">
+  <c-strong-dialog v-model="visible" @submit="submit"  backUrl="shopGood">
     <el-form :model="form" ref="form" :rules="rules">
       <el-form-item label="上级分类" prop="pid">
         <el-select v-model="form.pid" filterable>
