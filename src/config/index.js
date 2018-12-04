@@ -20,7 +20,7 @@ export const AXIOS_DEFAULT_CONFIG = {
 }
 
 // 默认的表单布局
-export const defaultFormLayout = { md: { span: 24 }, lg: { span: 15 } }
+export const defaultFormLayout = { md: { span: 22 }, lg: { span: 10 } }
 
 // API 默认配置
 export const API_DEFAULT_CONFIG = {

@@ -9,7 +9,7 @@
         <el-button
           type="primary"
           size="small"
-          @click="$router.push({name: 'shopCategoryAdd'})"
+          @click="$router.push({name: 'shopGoodAdd'})"
           icon="el-icon-plus"
         > 添加</el-button>
       </template>
@@ -27,14 +27,24 @@
         :data="data.data"
         style="width: 100%"
       >
-        <el-table-column
-          v-for="item in columns"
-          :key="item.id"
-          v-bind="item"
-        />
+        <template v-for="item in columns">
+          <el-table-column
+            :key="item.id"
+            v-bind="item"
+            v-if="item.type !== 'index'"
+          >
+            <template slot-scope="scope">
+              <img v-if="item.prop === 'cover'" :src="scope.row.cover" />
+              <span v-else-if="item.prop === 'sales_price' || item.prop === 'original_price' || item.prop === 'cost_price'">{{scope.row[item.prop]}}￥</span>
+              <span v-else>{{scope.row[item.prop]}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-else v-bind="item" :key="item.id" />
+        </template>
         <el-table-column
           label="操作"
           width="250"
+          fixed="right"
         >
           <template slot-scope="scope">
             <el-button
@@ -61,17 +71,18 @@ export default {
   data () {
     return {
       columns: [
-        {type: 'index', label: '编号', width: 50},
-        {prop: 'name', label: '产品名称'},
-        {prop: 'category_id', label: '所属分类'},
+        {type: 'index', label: '编号', fixed: 'left', width: 50},
+        {prop: 'name', label: '产品名称', fixed: 'left', width: 300},
+        {prop: 'cover', label: '产品缩略图', width: 100},
+        {prop: 'category_name', label: '所属分类'},
         {prop: 'purchase_limit', label: '最大购买'},
         {prop: 'integral', label: '积分'},
         {prop: 'store', label: '库存'},
         {prop: 'sales_price', label: '销售价'},
         {prop: 'original_price', label: '原价'},
         {prop: 'cost_price', label: '成本价'},
-        {prop: 'create_time', label: '创建时间'},
-        {prop: 'update_time', label: '更改时间'}
+        {prop: 'create_time', width: 160, label: '创建时间'},
+        {prop: 'update_time', width: 160, label: '更改时间'}
       ],
       filterParams: {
         name: ''
@@ -86,7 +97,7 @@ export default {
       }
       this.$db.page('shopProduct', params).then(res => {
         res.data = res.data.map(item => {
-          item.pname = ''
+          item.category_name = ''
           this.getParent(item)
           return item
         })
@@ -103,11 +114,8 @@ export default {
       this.$refs.list.updateData()
     },
     async getParent (item) {
-      if (item.pid) {
-        let res = await this.$db.find('shopProduct', item.pid, null, 0)
-        item.pname = res.name ? res.name : ''
-      }
-      return ''
+      let res = await this.$db.find('shopCategory', item.category_id, null, 0)
+      item.category_name = res.name ? res.name : ''
     }
   },
   created () {}
