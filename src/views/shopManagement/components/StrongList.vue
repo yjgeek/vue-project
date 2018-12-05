@@ -121,9 +121,8 @@ export default {
     .table-list {
         padding-top: 0;
         .page {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 15px 0 0;
+          text-align: right;
+          margin: 15px 15px 0 0;
         }
     }
 }
