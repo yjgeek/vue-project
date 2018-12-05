@@ -2,7 +2,7 @@
     <el-breadcrumb separator="/">
         <template v-for="(item, i) in breadData">
             <el-breadcrumb-item v-if="item=='首页'" to="/" :key="i">{{item}}</el-breadcrumb-item>
-            <el-breadcrumb-item v-else-if="isObject(item)" :key="i"><span class="breadcrumb-a" @click="$router.push({name:item.url, params: item.params ? item.params: {}})"></span></el-breadcrumb-item>
+            <el-breadcrumb-item v-else-if="isObject(item)" :key="i"><span class="breadcrumb-a" @click="$router.push({name:item.url, params: item.params ? item.params: {}})">{{item.text}}</span></el-breadcrumb-item>
             <el-breadcrumb-item v-else :key="i">{{item}}</el-breadcrumb-item>
         </template>
     </el-breadcrumb>

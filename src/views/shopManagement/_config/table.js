@@ -62,6 +62,31 @@ export default {
           dataType: DATA_TYPE.String
         }
       ]
+    },
+    {
+      name: 'shopMarketing', // 营销方案
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'type',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'description',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        }
+      ]
     }
   ],
   datas: datas
