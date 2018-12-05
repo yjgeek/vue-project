@@ -60,6 +60,14 @@ export default {
           meta: {
             bread: [{text: '商品列表', url: 'shopGood'}, '商品添加']
           }
+        },
+        {
+          path: 'goodEdit',
+          name: 'shopGoodEdit',
+          component: GoodAddEditView,
+          meta: {
+            bread: [{text: '商品列表', url: 'shopGood'}, '商品更改']
+          }
         }
       ]
     }

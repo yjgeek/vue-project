@@ -1,2 +1,0 @@
-webpackJsonp([4],{BTJF:function(e,t){},tlXl:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var a={render:function(){this.$createElement;this._self._c;return this._m(0)},staticRenderFns:[function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"index"},[t("p",[this._v("Welcome to YjGeek backstage management System ")])])}]};var s=n("VU/8")({name:"index",data:function(){return{}}},a,!1,function(e){n("BTJF")},"data-v-535b82b0",null);t.default=s.exports}});
-//# sourceMappingURL=4.8c8b877c767d10fbb0e4.js.map

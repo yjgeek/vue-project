@@ -50,7 +50,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="$router.push({name: 'shopCategoryEdit', params: {id: scope.row.id}})"
+              @click="$router.push({name: 'shopGoodEdit', params: {id: scope.row.id}})"
             >编辑</el-button>
             <el-button
               size="mini"
@@ -77,7 +77,7 @@ export default {
         {prop: 'category_name', label: '所属分类'},
         {prop: 'purchase_limit', label: '最大购买'},
         {prop: 'integral', label: '积分'},
-        {prop: 'store', label: '库存'},
+        {prop: 'stock', label: '库存'},
         {prop: 'sales_price', label: '销售价'},
         {prop: 'original_price', label: '原价'},
         {prop: 'cost_price', label: '成本价'},

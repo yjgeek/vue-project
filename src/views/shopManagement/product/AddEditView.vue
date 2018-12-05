@@ -18,8 +18,8 @@
               </el-form-item>
             </el-col>
             <el-col v-bind="$config.defaultFormLayout">
-              <el-form-item label="分类名字" prop="name" >
-                <el-input v-model="form.name" placeholder="请输入分类名字" />
+              <el-form-item label="产品名字" prop="name" >
+                <el-input v-model="form.name" placeholder="请输入产品名字" />
               </el-form-item>
             </el-col>
             <el-col v-bind="$config.defaultFormLayout">
@@ -69,20 +69,42 @@
           </el-row>
         </el-tab-pane>
         <el-tab-pane label="产品图片">
-          产品图片
+          <el-row>
+            <el-col v-bind="$config.defaultFormLayout">
+              <el-form-item label="产品缩略图"  label-width="100px" prop="cover" >
+                <c-upload v-model="form.cover" size="90x90" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-form-item label="产品图集" label-width="100px" prop="picture" >
+              <c-upload  v-for="(item, i) in form.picture" :key="i" v-model="item.src" @success="handleUploadProductImg" />
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="产品详情" label-width="100px" prop="defail" >
+              <mavon-editor style="height: 500px" ref="md" @imgAdd="$imgAdd" v-model="form.defail"/>
+            </el-form-item>
+          </el-row>
         </el-tab-pane>
         <el-tab-pane label="其他属性">
-          其他属性
+          <c-json-edit v-model="form.attr" :defaultVal="form.attr"  />
         </el-tab-pane>
       </el-tabs>
       <el-form-item label-width="0" style="text-align: center">
         <el-button type="danger" @click="$router.push({name: 'shopGood'})">取消</el-button>
-        <el-button type="primary">提交</el-button>
+        <el-button type="primary" @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
+import Vue from 'vue'
+import mavonEditor from 'mavon-editor'
+import {Mock} from 'utils/index'
+import 'mavon-editor/dist/css/index.css'
+import cJsonEdit from './JsonEdit'
+Vue.use(mavonEditor)
 export default {
   data () {
     return {
@@ -101,11 +123,12 @@ export default {
         integral: '',
         stock_set: '',
         stock: '',
-        status: 1,
+        status: '',
         sales_price: '',
         original_price: '',
         cost_price: '',
-        attr: {}
+        attr: {},
+        picture: [{src: ''}]
       }
     }
   },
@@ -114,7 +137,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           let key = this.form.id ? 'update' : 'add'
-          this.$db[key]('shopCategory', this.form).then(res => {
+          this.$db[key]('shopProduct', this.form).then(res => {
             this.$router.back()
             this.$emit('update')
             this.$message.success('提交成功!')
@@ -123,12 +146,24 @@ export default {
           this.$message.warning('参数有误，请检查!')
         }
       })
+    },
+    $imgAdd (pos, $file) {
+      this.$refs.md.$img2Url(pos, Mock.Random.dataImage('300x300', `${$file.name}(300x300})`))
+    },
+    handleUploadProductImg () {
+      this.form.picture.push({src: ''})
     }
+  },
+  components: {
+    cJsonEdit
   },
   created () {
     let id = this.$route.params.id
     if (id) {
-      this.$db.find('shopCategory', { id }, null, 200).then(res => {
+      this.$db.find('shopProduct', { id }, null, 200).then(res => {
+        if (!res.picture[0]) {
+          res.picture = [{src: ''}]
+        }
         this.form = res
       })
     }
