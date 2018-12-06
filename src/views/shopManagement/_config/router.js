@@ -5,6 +5,18 @@ const GoodAddEditView = r => require.ensure([], () => r(require('../product/AddE
 const CategoryIndex = r => require.ensure([], () => r(require('../product/category/Index')), 'shop')
 const CategoryAddEditView = r => require.ensure([], () => r(require('../product/category/children/AddEditView')), 'shop')
 const MarketingIndex = r => require.ensure([], () => r(require('../marketing/Index')), 'shop')
+const MarketingAddEditView = r => require.ensure([], () => r(require('../marketing/AddEditView')), 'shop')
+const MarketingCollectionIndex = r => require.ensure([], () => r(require('../marketing/children/Collection')), 'shop')
+
+// 具体营销活动管理
+const marketingCollection = [{
+  path: 'marketingCollection',
+  name: 'shopMarketingCollection',
+  component: MarketingCollectionIndex,
+  meta: {
+    bread: [{text: '营销方案管理', url: 'shopMarketing'}, '#{name}']
+  }
+}]
 
 // 营销方案管理
 const marketing = {
@@ -13,7 +25,14 @@ const marketing = {
   component: MarketingIndex,
   meta: {
     bread: ['营销方案管理']
-  }
+  },
+  children: [
+    {
+      path: 'add',
+      name: 'shopMarketingAdd',
+      component: MarketingAddEditView
+    }
+  ]
 }
 // 商品管理
 const product = {
@@ -83,7 +102,8 @@ export default {
   },
   component: shopManagement,
   children: [
-    ...product,
-    ...marketing
+    product,
+    marketing,
+    ...marketingCollection
   ]
 }

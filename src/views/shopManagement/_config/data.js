@@ -28,16 +28,20 @@ export default {
     {name: '小米8 全面屏游戏智能手机 6GB+64GB 黑色 全网通4G 双卡双待', picture: [], status: '', cover: Mock.Random.dataImage('90x90', Mock.mock('@cname()')), category_id: 15, detail: '<img src="" alt=""/>', purchase_limit: 20, integral: 20, stock_set: 1, stock: 102, sales_price: 151, original_price: 151, cost_price: 151, attr: {}}
   ],
   shopMarketing: [
-    {name: '秒杀', type: 'spike', description: '促销倒计时限购活动'},
-    {name: '拼团', type: 'fightGroup', description: '定时间段团购商品'},
-    {name: '优惠卷', type: 'coupon', description: '可自定义优惠卷类型，也可设置使用期限、发放数量、金额等'},
-    {name: '满赠送', type: 'fullGift', description: '自定义设定消费额度后送商品'},
-    {name: '满就减', type: 'lower', description: '自定义设定消费额度后减金额'}
+    {name: '秒杀模式', type: 'spike', description: '规则：促销倒计时限购活动'},
+    {name: '拼团模式', type: 'fightGroup', description: '规则：定时间段团购商品'},
+    {name: '优惠卷模式', type: 'coupon', description: '规则：可自定义优惠卷类型，也可设置使用期限、发放数量、金额等'},
+    {name: '满赠送模式', type: 'fullGift', description: '规则：自定义设定消费额度后送商品'},
+    {name: '满就减模式', type: 'lower', description: '规则：自定义设定消费额度后减金额'}
   ],
   shopMarketingCollection: [
     // 秒杀活动类型
-    { shopMarketing_id: 1, name: '双11专场', time: [{ value: Mock.mock('@now'), event_good: [1, 2, 4] }, {value: Mock.mock('@now'), event_good: [1, 2, 4]}], end_time: Mock.mock('@now') },
+    { shop_marketing_id: 1, title: '3C现场秒杀活动', max_good: 15, description: '每个商品仅限10件，抢完为止', end_time: Mock.mock('@now') },
     // 拼团活动
-    { shopMarketing_id: 2, name: '拼多多拼团', user_count: 10, end_time: Mock.mock('@now') }
+    { shop_marketing_id: 2, title: '双11拼团活动', max_good: 15, description: '', end_time: Mock.mock('@now') }
+  ],
+  // 活动商品
+  shopMarketingGood: [
+    {shop_marketing_collection_id: 1}
   ]
 }

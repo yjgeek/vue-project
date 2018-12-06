@@ -87,6 +87,51 @@ export default {
           dataType: DATA_TYPE.String
         }
       ]
+    },
+    {
+      name: 'shopMarketingCollection', // 营销方案具体活动列表
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'shop_marketing_id',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'title',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'description',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        }
+      ]
+    },
+    {
+      name: 'shopMarketingGood', // 参加活动的商品
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'shop_marketing_collection_id',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'shop_product_id',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        }
+      ]
     }
   ],
   datas: datas
