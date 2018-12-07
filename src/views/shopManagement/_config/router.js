@@ -7,15 +7,27 @@ const CategoryAddEditView = r => require.ensure([], () => r(require('../product/
 const MarketingIndex = r => require.ensure([], () => r(require('../marketing/Index')), 'shop')
 const MarketingAddEditView = r => require.ensure([], () => r(require('../marketing/AddEditView')), 'shop')
 const MarketingCollectionIndex = r => require.ensure([], () => r(require('../marketing/children/Collection')), 'shop')
+const MarketingCollectionAddEditView = r => require.ensure([], () => r(require('../marketing/children/AddEditView')), 'shop')
 
-// 具体营销活动管理
+// 具体营销方案活动管理
 const marketingCollection = [{
   path: 'marketingCollection',
   name: 'shopMarketingCollection',
   component: MarketingCollectionIndex,
   meta: {
     bread: [{text: '营销方案管理', url: 'shopMarketing'}, '#{name}']
-  }
+  },
+  children: [
+    {
+      path: 'add',
+      name: 'shopMarketingCollectionAdd',
+      component: MarketingCollectionAddEditView
+    }, {
+      path: 'edit',
+      name: 'shopMarketingCollectionEdit',
+      component: MarketingCollectionAddEditView
+    }
+  ]
 }]
 
 // 营销方案管理

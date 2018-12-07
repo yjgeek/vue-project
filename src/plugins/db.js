@@ -41,9 +41,8 @@ class DB {
     }
     data = data.map(item => {
       if (!item.create_time && item.create_time !== false) {
-        let date = Mock.Random.now('yyyy-MM-dd HH:mm:ss')
-        item['create_time'] = date
-        item['update_time'] = date
+        item['create_time'] = new Date()
+        item['update_time'] = new Date()
       }
       return item
     })
@@ -71,7 +70,10 @@ class DB {
       await this.initDB()
     }
     if (typeof data === 'object' && data.update_time !== false) {
-      data['update_time'] = Mock.Random.now('yyyy-MM-dd HH:mm:ss')
+      data['update_time'] = new Date()
+    }
+    if (typeof data === 'object' && !(data.create_time instanceof Date)) {
+      delete data['create_time']
     }
     where = where || {id: data['id']}
     return new Promise(async (resolve, reject) => {
@@ -124,6 +126,7 @@ class DB {
    */
   async select (table, where = null, other = {}, timeout) {
     if (!this.connent) await this.initDB()
+    where = this.filterWhere(where)
     return new Promise(async (resolve, reject) => {
       try {
         let res = await this.connent.select({
@@ -218,6 +221,8 @@ class DB {
           if (!data) {
             val = ''
           }
+        } else if (item instanceof Array) {
+          val = item[0]
         } else if (typeof item === 'object') {
           val = Object.values(item)[0]
         }
@@ -266,8 +271,41 @@ class DB {
       timeout = this.getTimeout()
     }
     setTimeout(() => {
+      if (Object.prototype.toString.call(data) === '[object Object]') {
+        // 分页
+        if (data.data instanceof Array) {
+          this.conversionDate(data.data)
+        } else {
+          this.conversionDate(data)
+        }
+      } else if (data instanceof Array) {
+        this.conversionDate(data)
+      }
       callback(data)
     }, timeout)
   }
+  /**
+   * 转换字段时间格式 yyyy-MM-dd HH:mm:ss
+   * @param {Object || Array} data
+   * @return {Object || Array} 返回原来的数据
+   */
+  conversionDate (data) {
+    if (Object.prototype.toString.call(data) === '[object Object]') {
+      Object.keys(data).forEach(key => {
+        if (data[key] instanceof Date) {
+          let date = data[key]
+          data[key] = `${date.getFullYear()}-${makeUpDate(date.getMonth() + 1)}-${makeUpDate(date.getDate())} ${makeUpDate(date.getHours())}:${makeUpDate(date.getMinutes())}:${makeUpDate(date.getSeconds())}`
+        }
+      })
+    } else if (data instanceof Array) {
+      data.forEach(item => {
+        this.conversionDate(item)
+      })
+    }
+    return data
+  }
 }
 export default new DB()
+function makeUpDate (data) {
+  return data < 10 ? '0' + data : data
+}

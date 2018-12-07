@@ -59,6 +59,10 @@ export default {
       if (this.getData) {
         this.loading = true
         this.getData(params, res => {
+          if (res === false) {
+            this.loading = false
+            return false
+          }
           params.page = res.page
           this.total = res.totalCount
           this.listData = res.data

@@ -9,16 +9,16 @@
         <el-button
           type="primary"
           size="small"
-          @click="$router.push({name: 'shopGoodAdd'})"
+          @click="$router.push({name: 'shopMarketingCollectionAdd', params: {shopMarketingId: parent.id}})"
           icon="el-icon-plus"
         > 添加</el-button>
       </template>
       <template slot="filter">
-        <el-form-item label="用户名称">
-          <el-input
-            v-model="filterParams.name"
-            placeholder="请输入用户名称"
-          ></el-input>
+        <el-form-item label="创建时间">
+          <el-date-picker v-model="filterParams.create_time" format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-date-picker v-model="filterParams.end_time" format="yyyy-MM-dd HH:mm:ss" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
         </el-form-item>
       </template>
       <el-table
@@ -34,8 +34,9 @@
             v-if="item.type !== 'index'"
           >
             <template slot-scope="scope">
-              <img v-if="item.prop === 'cover'" :src="scope.row.cover" />
-              <span v-else-if="item.prop === 'sales_price' || item.prop === 'original_price' || item.prop === 'cost_price'">{{scope.row[item.prop]}}￥</span>
+              <span v-if="item.prop === 'remaining_time'">
+                <shop-countdown :val="scope.row.end_time" />
+              </span>
               <span v-else>{{scope.row[item.prop]}}</span>
             </template>
           </el-table-column>
@@ -50,7 +51,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="$router.push({name: 'shopGoodEdit', params: {id: scope.row.id}})"
+              @click="$router.push({name: 'shopMarketingCollectionEdit', params: {id: scope.row.id}})"
             >编辑</el-button>
             <el-button
               size="mini"
@@ -66,59 +67,66 @@
 </template>
 
 <script>
+import shopCountdown from './Countdown'
 export default {
   name: 'shop-product-good',
   data () {
     return {
+      parent: {},
       columns: [
-        {type: 'index', label: '编号', fixed: 'left', width: 50},
-        {prop: 'name', label: '产品名称', fixed: 'left', width: 300},
-        {prop: 'cover', label: '产品缩略图', width: 100},
-        {prop: 'category_name', label: '所属分类'},
-        {prop: 'purchase_limit', label: '最大购买'},
-        {prop: 'integral', label: '积分'},
-        {prop: 'stock', label: '库存'},
-        {prop: 'sales_price', label: '销售价'},
-        {prop: 'original_price', label: '原价'},
-        {prop: 'cost_price', label: '成本价'},
-        {prop: 'create_time', width: 160, label: '创建时间'},
-        {prop: 'update_time', width: 160, label: '更改时间'}
+        {type: 'index', label: '编号', width: 50},
+        {prop: 'title', label: '标题'},
+        {prop: 'condition', label: '条件'},
+        {prop: 'description', label: '规则', width: 400},
+        {prop: 'product_total', label: '活动商品数量'},
+        {prop: 'create_time', label: '创建时间'},
+        {prop: 'remaining_time', label: '剩余时间', width: 100},
+        {prop: 'end_time', label: '结束时间'}
       ],
       filterParams: {
-        name: ''
+        create_time: [],
+        end_time: []
       }
     }
   },
   methods: {
     getData (params, cb) {
       params = JSON.parse(JSON.stringify(params))
-      if (params.name) {
-        params.name = { like: params.name + '%' }
+      if (params.create_time[0]) {
+        params.create_time = {'-': {low: params.create_time[0], high: params.create_time[1]}}
       }
-      this.$db.page('shopProduct', params).then(res => {
+      if (params.end_time[0]) {
+        params.end_time = {'-': {low: new Date(params.end_time[0]), high: new Date(params.end_time[1])}}
+      }
+      this.$db.page('shopMarketingCollection', params).then(res => {
         res.data = res.data.map(item => {
-          item.category_name = ''
-          this.getParent(item)
+          item.product_total = 0
+          this.$db.connent.count({from: 'shopMarketingGood', where: {shop_marketing_collection_id: item.id}}).then(count => {
+            item.product_total = count
+          })
           return item
         })
         cb(res)
+      }).catch(_ => {
+        cb(Boolean(false))
       })
     },
     remove (id) {
-      this.$db.remove('shopProduct', id).then(res => {
+      this.$db.remove('shopMarketingCollection', id).then(res => {
         this.$message.success('删除成功')
         this.updateData()
       })
     },
     updateData () {
       this.$refs.list.updateData()
-    },
-    async getParent (item) {
-      let res = await this.$db.find('shopCategory', item.category_id, null, 0)
-      item.category_name = res.name ? res.name : ''
     }
   },
-  created () {}
+  components: {
+    shopCountdown
+  },
+  created () {
+    this.parent = this.$route.params.item || {}
+  }
 }
 </script>
 

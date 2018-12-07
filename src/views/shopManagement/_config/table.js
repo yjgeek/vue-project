@@ -60,6 +60,11 @@ export default {
           name: 'name',
           notNull: true,
           dataType: DATA_TYPE.String
+        },
+        {
+          name: 'create_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
         }
       ]
     },
@@ -78,11 +83,6 @@ export default {
         },
         {
           name: 'type',
-          notNull: true,
-          dataType: DATA_TYPE.String
-        },
-        {
-          name: 'description',
           notNull: true,
           dataType: DATA_TYPE.String
         }
@@ -107,9 +107,14 @@ export default {
           dataType: DATA_TYPE.String
         },
         {
-          name: 'description',
+          name: 'create_time',
           notNull: true,
-          dataType: DATA_TYPE.String
+          dataType: DATA_TYPE.DateTime
+        },
+        {
+          name: 'end_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
         }
       ]
     },

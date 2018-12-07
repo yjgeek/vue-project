@@ -36,12 +36,10 @@ export default {
   ],
   shopMarketingCollection: [
     // 秒杀活动类型
-    { shop_marketing_id: 1, title: '3C现场秒杀活动', max_good: 15, description: '每个商品仅限10件，抢完为止', end_time: Mock.mock('@now') },
+    { shop_marketing_id: 1, title: '3C现场秒杀活动', condition: '', description: '每个商品仅限10件，抢完为止', end_time: Mock.mock('@now') },
     // 拼团活动
-    { shop_marketing_id: 2, title: '双11拼团活动', max_good: 15, description: '', end_time: Mock.mock('@now') }
+    { shop_marketing_id: 2, title: '双11拼团活动', condition: '', description: '', end_time: Mock.mock('@now') }
   ],
   // 活动商品
-  shopMarketingGood: [
-    {shop_marketing_collection_id: 1}
-  ]
+  shopMarketingGood: []
 }
