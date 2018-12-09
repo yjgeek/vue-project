@@ -6,12 +6,8 @@
       ref="list"
     >
       <template slot="operating">
-        <el-button
-          type="primary"
-          size="small"
-          @click="$router.push({name: 'shopGoodAdd'})"
-          icon="el-icon-plus"
-        > 添加</el-button>
+        <el-button type="primary" size="small" @click="$router.push({name: 'shopGoodAdd'})" icon="el-icon-plus">添加</el-button>
+        <el-button type="primary" size="small" @click="bathAddMathing">批量参加活动</el-button>
       </template>
       <template slot="filter">
         <el-form-item label="用户名称">
@@ -26,7 +22,9 @@
         slot-scope="data"
         :data="data.data"
         style="width: 100%"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="55" />
         <template v-for="item in columns">
           <el-table-column
             :key="item.id"
@@ -47,25 +45,19 @@
           fixed="right"
         >
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="$router.push({name: 'shopGoodEdit', params: {id: scope.row.id}})"
-            >编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="remove(scope.row.id)"
-            >删除</el-button>
+            <el-button size="mini" type="primary" @click="$router.push({name: 'shopGoodEdit', params: {id: scope.row.id}})">编辑</el-button>
+            <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </c-strong-list>
     <router-view @update="updateData" />
+    <shop-makeing-dialog v-if="isShowMarketing" :val="marketingVal" @close="isShowMarketing = false" />
   </div>
 </template>
 
 <script>
+import shopMakeingDialog from './MakeingDialog'
 export default {
   name: 'shop-product-good',
   data () {
@@ -86,7 +78,9 @@ export default {
       ],
       filterParams: {
         name: ''
-      }
+      },
+      marketingVal: [],
+      isShowMarketing: false
     }
   },
   methods: {
@@ -116,7 +110,20 @@ export default {
     async getParent (item) {
       let res = await this.$db.find('shopCategory', item.category_id, null, 0)
       item.category_name = res.name ? res.name : ''
+    },
+    bathAddMathing () {
+      if (this.marketingVal[0]) {
+        this.isShowMarketing = true
+      } else {
+        this.$message.warning('请选择商品')
+      }
+    },
+    handleSelectionChange (val) {
+      this.marketingVal = val
     }
+  },
+  components: {
+    shopMakeingDialog
   },
   created () {}
 }
