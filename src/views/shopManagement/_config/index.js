@@ -25,6 +25,16 @@ export default {
         text: '商品营销管理',
         icon: 'marketing',
         path: 'marketing'
+      },
+      {
+        text: '权限管理',
+        icon: 'rbac',
+        path: 'rbac',
+        childs: [
+          { text: '用户管理', icon: 'user', path: 'user' },
+          { text: '角色管理', icon: 'role', path: 'role' },
+          { text: '节点管理', icon: 'node', path: 'node' }
+        ]
       }
     ]
   }

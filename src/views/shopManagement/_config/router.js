@@ -8,7 +8,78 @@ const MarketingIndex = r => require.ensure([], () => r(require('../marketing/Ind
 const MarketingAddEditView = r => require.ensure([], () => r(require('../marketing/AddEditView')), 'shop')
 const MarketingCollectionIndex = r => require.ensure([], () => r(require('../marketing/children/Collection')), 'shop')
 const MarketingCollectionAddEditView = r => require.ensure([], () => r(require('../marketing/children/AddEditView')), 'shop')
-
+const RoleIndex = r => require.ensure([], () => r(require('../rbac/role/Index')), 'shopRbac')
+const RoleAddEditView = r => require.ensure([], () => r(require('../rbac/role/children/AddEditView')), 'shopRbac')
+const UserIndex = r => require.ensure([], () => r(require('../rbac/user/Index')), 'shopRbac')
+const UserAddEditView = r => require.ensure([], () => r(require('../rbac/user/children/AddEditView')), 'shopRbac')
+const NodeIndex = r => require.ensure([], () => r(require('../rbac/node/Index')), 'shopRbac')
+const rbac = {
+  path: 'rbac',
+  component: RouterView,
+  meta: {
+    bread: ['权限管理']
+  },
+  children: [
+    {
+      path: 'role',
+      component: RoleIndex,
+      name: 'shopRole',
+      meta: {
+        bread: ['角色管理', '角色列表']
+      },
+      children: [
+        {
+          path: 'add',
+          name: 'shopRoleAdd',
+          component: RoleAddEditView,
+          meta: {
+            bread: ['角色管理']
+          }
+        }, {
+          path: 'edit',
+          name: 'shopRoleEdit',
+          component: RoleAddEditView,
+          meta: {
+            bread: ['角色管理']
+          }
+        }
+      ]
+    },
+    {
+      path: 'user',
+      component: UserIndex,
+      name: 'shopUser',
+      meta: {
+        bread: ['用户管理', '用户列表']
+      },
+      children: [
+        {
+          path: 'add',
+          name: 'shopUserAdd',
+          component: UserAddEditView,
+          meta: {
+            bread: ['用户管理']
+          }
+        }, {
+          path: 'edit',
+          name: 'shopUserEdit',
+          component: UserAddEditView,
+          meta: {
+            bread: ['用户管理']
+          }
+        }
+      ]
+    },
+    {
+      path: 'node',
+      component: NodeIndex,
+      name: 'shopNode',
+      meta: {
+        bread: ['节点管理']
+      }
+    }
+  ]
+}
 // 具体营销方案活动管理
 const marketingCollection = [{
   path: 'marketingCollection',
@@ -116,6 +187,7 @@ export default {
   children: [
     product,
     marketing,
+    rbac,
     ...marketingCollection
   ]
 }
