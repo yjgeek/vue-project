@@ -50,6 +50,7 @@ export default {
         this.h = h
         this.m = m
         this.s = s
+        console.log(this.val, d, h, m, s)
       }
     },
     countDownTime () {
@@ -81,12 +82,18 @@ export default {
       return data < 10 ? '0' + data : data
     }
   },
+  beforeDestroy () {
+    clearInterval(this.interval)
+  },
   created () {
     this.analysisTime()
+    this.timestamp = new Date(this.val).getTime()
     if (this.timestamp > 0) {
       this.interval = setInterval(() => {
         this.countDownTime()
       }, 1000)
+    } else {
+      this.timestamp = 0
     }
   }
 }

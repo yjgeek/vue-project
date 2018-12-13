@@ -3,7 +3,7 @@
     title="选择活动"
     :visible.sync="visible"
     center>
-      <el-radio v-for="item in listData" :key="item.id" v-model="value" :label="item.id" border>{{item.title}}</el-radio>
+      <el-radio v-for="item in listData" :key="item.id" v-model="value" :label="item.id" class="mb15" border>{{item.title}}</el-radio>
     <span slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="add">确 定</el-button>

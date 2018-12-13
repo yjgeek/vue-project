@@ -115,6 +115,11 @@ export default {
           name: 'end_time',
           notNull: true,
           dataType: DATA_TYPE.DateTime
+        },
+        {
+          name: 'status', // 1进行中 2结束
+          notNull: true,
+          dataType: DATA_TYPE.Number
         }
       ]
     },
@@ -135,6 +140,46 @@ export default {
           name: 'shop_product_id',
           notNull: true,
           dataType: DATA_TYPE.Number
+        }
+      ]
+    },
+    {
+      name: 'shopRole', // 角色
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        }
+      ]
+    },
+    {
+      name: 'shopNode', // 节点表
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'pid',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'path',
+          notNull: true,
+          dataType: DATA_TYPE.String
         }
       ]
     }

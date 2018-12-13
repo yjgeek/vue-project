@@ -9,7 +9,7 @@
         <el-button
           type="primary"
           size="small"
-          @click="$router.push({name: 'shopMarketingCollectionAdd', params: {shopMarketingId: parent.id}})"
+          @click="$router.push({name: 'shopMarketingCollectionAdd', params: {shopMarketingId: pid}})"
           icon="el-icon-plus"
         > 添加</el-button>
       </template>
@@ -27,20 +27,20 @@
         :data="data.data"
         style="width: 100%"
       >
-        <template v-for="item in columns">
+        <template v-for="(item,i) in columns">
           <el-table-column
-            :key="item.id"
+            :key="i"
             v-bind="item"
             v-if="item.type !== 'index'"
           >
             <template slot-scope="scope">
-              <span v-if="item.prop === 'remaining_time'">
+              <span v-if="item.prop == 'remaining_time'">
                 <shop-countdown :val="scope.row.end_time" />
               </span>
               <span v-else>{{scope.row[item.prop]}}</span>
             </template>
           </el-table-column>
-          <el-table-column v-else v-bind="item" :key="item.id" />
+          <el-table-column v-else v-bind="item" :key="i" />
         </template>
         <el-table-column
           label="操作"
@@ -72,7 +72,7 @@ export default {
   name: 'shop-product-good',
   data () {
     return {
-      parent: {},
+      pid: null,
       columns: [
         {type: 'index', label: '编号', width: 50},
         {prop: 'title', label: '标题'},
@@ -98,6 +98,7 @@ export default {
       if (params.end_time[0]) {
         params.end_time = {'-': {low: new Date(params.end_time[0]), high: new Date(params.end_time[1])}}
       }
+      params['shop_marketing_id'] = this.pid
       this.$db.page('shopMarketingCollection', params).then(res => {
         res.data = res.data.map(item => {
           item.product_total = 0
@@ -125,7 +126,13 @@ export default {
     shopCountdown
   },
   created () {
-    this.parent = this.$route.params.item || {}
+    const {id} = this.$route.params.item || {}
+    if (id) {
+      this.setLocalStorage('shop_marketing_id', id)
+      this.pid = id
+    } else {
+      this.pid = Number(this.getLocalStorage('shop_marketing_id'))
+    }
   }
 }
 </script>
