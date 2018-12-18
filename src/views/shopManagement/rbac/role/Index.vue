@@ -35,7 +35,7 @@
               </div>
               <el-switch
                 v-if="item.prop === 'status'"
-                v-model="scope.row[item.prop]"
+                v-model="scope.row.status"
                 @change="handleStatus(scope.row)"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
@@ -75,16 +75,12 @@ export default {
       if (params.name) {
         params.name = { like: params.name + '%' }
       }
-      this.$db.page('shopProduct', params).then(res => {
-        res.data = res.data.map(item => {
-          item.status = true
-          return item
-        })
+      this.$db.page('shopRole', params).then(res => {
         cb(res)
       })
     },
     remove (id) {
-      this.$db.remove('shopProduct', id).then(res => {
+      this.$db.remove('shopRole', id).then(res => {
         this.$message.success('删除成功')
         this.updateData()
       })
@@ -92,8 +88,8 @@ export default {
     updateData () {
       this.$refs.list.updateData()
     },
-    handleStatus (item) {
-      item.status = !item.status
+    handleStatus ({id, status}) {
+      this.$db.update('shopRole', {id, status})
     }
   },
   created () {}

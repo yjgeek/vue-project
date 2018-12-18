@@ -144,6 +144,34 @@ export default {
       ]
     },
     {
+      name: 'shopUser', // 用户
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'mobile',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'email',
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'status',
+          dataType: DATA_TYPE.Boolean
+        }
+      ]
+    },
+    {
       name: 'shopRole', // 角色
       columns: [
         {
@@ -155,6 +183,10 @@ export default {
           name: 'name',
           notNull: true,
           dataType: DATA_TYPE.String
+        },
+        {
+          name: 'status',
+          dataType: DATA_TYPE.Boolean
         }
       ]
     },
@@ -168,6 +200,11 @@ export default {
         },
         {
           name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'api',
           notNull: true,
           dataType: DATA_TYPE.String
         },

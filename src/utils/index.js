@@ -143,3 +143,48 @@ export const sortObj = (key) => {
     }
   }
 }
+
+/**
+ * MAP数组转换树形结构
+ * 例：
+ * arrayToTreeBy(array, (a, b) => {
+ *     return a.pid == b.id // a 是属于 b 的子集内
+ * })
+ *
+ *
+ * @param array MAP数组
+ * @param iteratee 迭代器，iteratee 会调用两个个参数： a(当前项) 和 b(比较项)， 返回的值作为 a 是属于 b 的子集内
+ * @param childrensKey 存放子集的Key默认：'children'
+ * @returns 树形结构数组
+ */
+const arrayToTreeBy = function (array, iteratee, childrensKey) {
+  if (typeof childrensKey === 'undefined') childrensKey = 'children'
+  array.splice(0, array.length, ...array.filter((item, i) => {
+    const parent = array.find(compare => iteratee(item, compare))
+    if (parent) {
+      if (!Array.isArray(parent.children)) {
+        parent[childrensKey] = []
+      }
+      parent[childrensKey].push(item)
+      return false
+    }
+    return true
+  }))
+  return array
+}
+
+/**
+ * MAP数组转换树形结构
+ * 例：
+ * arrayToTreeBy(array, 'pid', 'id')
+ *
+ *
+ * @param array MAP数组
+ * @param akey a (当前项)的 Key
+ * @param bKey b (比较项)的 Key
+ * @param childrensKey 存放子集的Key
+ * @returns 树形结构数组
+ */
+export const arrayToTree = function (array, akey, bKey, childrensKey) {
+  return arrayToTreeBy(array, (a, b) => a[akey] === b[bKey], childrensKey)
+}

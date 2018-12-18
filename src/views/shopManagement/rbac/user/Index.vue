@@ -21,9 +21,7 @@
         slot-scope="data"
         :data="data.data"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
         <template v-for="item in columns">
           <el-table-column
             :key="item.id"
@@ -31,23 +29,25 @@
             v-if="item.type !== 'index'"
           >
             <template slot-scope="scope">
-              <img v-if="item.prop === 'cover'" :src="scope.row.cover" />
-              <span v-else-if="item.prop === 'sales_price' || item.prop === 'original_price' || item.prop === 'cost_price'">{{scope.row[item.prop]}}￥</span>
+              <div v-if="item.prop === 'operation'">
+                <el-button size="mini" type="primary" @click="$router.push({name: 'shopUserEdit', params: {id: scope.row.id}})">编辑</el-button>
+                <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
+              </div>
+              <el-switch
+                v-else-if="item.prop === 'status'"
+                v-model="scope.row.status"
+                @change="handleStatus(scope.row)"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+              </el-switch>
+              <div v-else-if="item.prop === 'roles'">
+                <el-tag v-for="role in scope.row[item.prop]" :key="role.id" type="success" size='mini'>{{role.name}}</el-tag>
+              </div>
               <span v-else>{{scope.row[item.prop]}}</span>
             </template>
           </el-table-column>
           <el-table-column v-else v-bind="item" :key="item.id" />
         </template>
-        <el-table-column
-          label="操作"
-          width="250"
-          fixed="right"
-        >
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="$router.push({name: 'shopUserEdit', params: {id: scope.row.id}})">编辑</el-button>
-            <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </c-strong-list>
     <router-view @update="updateData" />
@@ -56,28 +56,22 @@
 
 <script>
 export default {
-  name: 'shop-product-good',
+  name: 'shop-rbac-user',
   data () {
     return {
       columns: [
-        {type: 'index', label: '编号', fixed: 'left', width: 50},
-        {prop: 'name', label: '产品名称', fixed: 'left', width: 300},
-        {prop: 'cover', label: '产品缩略图', width: 100},
-        {prop: 'category_name', label: '所属分类'},
-        {prop: 'purchase_limit', label: '最大购买'},
-        {prop: 'integral', label: '积分'},
-        {prop: 'stock', label: '库存'},
-        {prop: 'sales_price', label: '销售价'},
-        {prop: 'original_price', label: '原价'},
-        {prop: 'cost_price', label: '成本价'},
+        {type: 'index', label: '编号', width: 50},
+        {prop: 'name', label: '用户名'},
+        {prop: 'mobile', label: '手机号码'},
+        {prop: 'email', label: '邮箱'},
+        {prop: 'status', width: 80, label: '状态'},
+        {prop: 'roles', label: '所属用户'},
         {prop: 'create_time', width: 160, label: '创建时间'},
-        {prop: 'update_time', width: 160, label: '更改时间'}
+        {prop: 'operation', width: 200, label: '操作'}
       ],
       filterParams: {
         name: ''
-      },
-      marketingVal: [],
-      isShowMarketing: false
+      }
     }
   },
   methods: {
@@ -86,17 +80,19 @@ export default {
       if (params.name) {
         params.name = { like: params.name + '%' }
       }
-      this.$db.page('shopProduct', params).then(res => {
+      this.$db.page('shopUser', params).then(res => {
         res.data = res.data.map(item => {
-          item.category_name = ''
-          this.getParent(item)
+          item.roles = []
+          this.getRoles(item.role_id).then(roles => {
+            item.roles = roles
+          })
           return item
         })
         cb(res)
       })
     },
     remove (id) {
-      this.$db.remove('shopProduct', id).then(res => {
+      this.$db.remove('shopUser', id).then(res => {
         this.$message.success('删除成功')
         this.updateData()
       })
@@ -104,19 +100,12 @@ export default {
     updateData () {
       this.$refs.list.updateData()
     },
-    async getParent (item) {
-      let res = await this.$db.find('shopCategory', item.category_id, null, 0)
-      item.category_name = res.name ? res.name : ''
+    async getRoles (ids) {
+      const res = await this.$db.select('shopRole', {'id': {'in': ids}})
+      return res
     },
-    bathAddMathing () {
-      if (this.marketingVal[0]) {
-        this.isShowMarketing = true
-      } else {
-        this.$message.warning('请选择商品')
-      }
-    },
-    handleSelectionChange (val) {
-      this.marketingVal = val
+    handleStatus ({id, status}) {
+      this.$db.update('shopUser', {id, status})
     }
   },
   created () {}

@@ -1,127 +1,146 @@
 <template>
-  <div>
-    <c-strong-list
-      :getData="getData"
-      :filter="filterParams"
-      ref="list"
-    >
-      <template slot="operating">
-        <el-button type="primary" size="small" @click="$router.push({name: 'shopRoleAdd'})" icon="el-icon-plus">添加</el-button>
-      </template>
-      <template slot="filter">
-        <el-form-item label="用户名称">
-          <el-input
-            v-model="filterParams.name"
-            placeholder="请输入用户名称"
-          ></el-input>
-        </el-form-item>
-      </template>
-      <el-table
-        slot="list"
-        slot-scope="data"
-        :data="data.data"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" />
-        <template v-for="item in columns">
-          <el-table-column
-            :key="item.id"
-            v-bind="item"
-            v-if="item.type !== 'index'"
-          >
-            <template slot-scope="scope">
-              <img v-if="item.prop === 'cover'" :src="scope.row.cover" />
-              <span v-else-if="item.prop === 'sales_price' || item.prop === 'original_price' || item.prop === 'cost_price'">{{scope.row[item.prop]}}￥</span>
-              <span v-else>{{scope.row[item.prop]}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column v-else v-bind="item" :key="item.id" />
-        </template>
-        <el-table-column
-          label="操作"
-          width="250"
-          fixed="right"
+  <el-card>
+    <el-row>
+      <el-col :span="6">
+        <el-tree
+          :data="nodeList"
+          node-key="id"
+          default-expand-all
+          :expand-on-click-node="false"
         >
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="$router.push({name: 'shopRoleEdit', params: {id: scope.row.id}})">编辑</el-button>
-            <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </c-strong-list>
-    <router-view @update="updateData" />
-  </div>
+          <span class="custom-tree-node" slot-scope="{ node, data }" @click="handleEdit(data)">
+            <span>{{data.name}}</span>
+            <span>
+              &nbsp;&nbsp;<el-button type="text" size="mini" @click.stop="() => append(data)"><c-icon type='add' /></el-button>
+              <el-button type="text" size="mini" @click.stop="() => remove(data)"><c-icon type='delete' /></el-button>
+            </span>
+          </span>
+        </el-tree>
+      </el-col>
+      <el-col :span="12">
+        <el-form ref="form" :model="form" :rules="formRules" label-width="80px" >
+          <el-form-item label="父节点">
+            <el-input v-model="parent.name" placeholder="请选择父节点，为空则为根节点" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="节点名称" prop="name">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="API方法" prop="api">
+            <el-input v-model="form.api"></el-input>
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-switch v-model="form.status" active-text="启用" inactive-text="禁止">
+            </el-switch>
+          </el-form-item>
+          <el-form-item style="text-align: center">
+            <el-button type='danger' @click="handleReset">重置</el-button>
+            <el-button type="primary" @click="handleSubmit" :loading="isSubmit">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+  </el-card>
 </template>
 
 <script>
+import {arrayToTree} from 'utils/index'
 export default {
-  name: 'shop-product-good',
+  name: 'shop-rbac-node',
   data () {
     return {
-      columns: [
-        {type: 'index', label: '编号', fixed: 'left', width: 50},
-        {prop: 'name', label: '产品名称', fixed: 'left', width: 300},
-        {prop: 'cover', label: '产品缩略图', width: 100},
-        {prop: 'category_name', label: '所属分类'},
-        {prop: 'purchase_limit', label: '最大购买'},
-        {prop: 'integral', label: '积分'},
-        {prop: 'stock', label: '库存'},
-        {prop: 'sales_price', label: '销售价'},
-        {prop: 'original_price', label: '原价'},
-        {prop: 'cost_price', label: '成本价'},
-        {prop: 'create_time', width: 160, label: '创建时间'},
-        {prop: 'update_time', width: 160, label: '更改时间'}
-      ],
-      filterParams: {
-        name: ''
+      nodeList: [],
+      isSubmit: false,
+      formRules: {
+        name: [{ required: true, message: '节点名称不能为空', trigger: 'blur' }],
+        api: [{ required: true, message: 'api不能为空', trigger: 'blur' }]
       },
-      marketingVal: [],
-      isShowMarketing: false
+      parent: {},
+      form: {
+        name: '',
+        api: '',
+        status: true,
+        pid: 0,
+        path: '0-'
+      }
     }
   },
   methods: {
-    getData (params, cb) {
-      params = JSON.parse(JSON.stringify(params))
-      if (params.name) {
-        params.name = { like: params.name + '%' }
-      }
-      this.$db.page('shopProduct', params).then(res => {
-        res.data = res.data.map(item => {
-          item.category_name = ''
-          this.getParent(item)
-          return item
-        })
-        cb(res)
+    getData () {
+      this.$db.select('shopNode').then(res => {
+        this.nodeList = arrayToTree(res, 'pid', 'id')
       })
     },
-    remove (id) {
-      this.$db.remove('shopProduct', id).then(res => {
+    handleSubmit () {
+      if (this.isSubmit) return false
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.isSubmit = true
+          if (this.form.id) {
+            this.$db.update('shopNode', this.form).then(res => {
+              this.getData()
+              this.handleReset()
+              this.$message.success('更改成功')
+              this.isSubmit = false
+            })
+          } else {
+            this.$db.add('shopNode', this.form).then(res => {
+              this.$db.find('shopNode', {api: this.form.api}).then(node => {
+                node.path = node.path + node.id + '-'
+                this.$db.update('shopNode', node).then(() => {
+                  this.getData()
+                  this.handleReset()
+                  this.$message.success('添加成功')
+                  this.isSubmit = false
+                })
+              })
+            })
+          }
+        } else {
+          this.$message.error('信息有误，请检查!')
+        }
+      })
+    },
+    handleReset () {
+      this.parent = {}
+      this.$refs.form.clearValidate()
+      this.form = {
+        name: '',
+        api: '',
+        status: true,
+        pid: 0,
+        path: '0-'
+      }
+    },
+    handleEdit (item) {
+      if (item.children) {
+        delete item.children
+      }
+      this.form = JSON.parse(JSON.stringify(item))
+    },
+    append (data) {
+      this.handleReset()
+      this.parent = data
+      this.form.pid = data.id
+      this.form.path = data.path
+    },
+
+    remove (data) {
+      this.$db.remove('shopNode', {path: {like: data.path + '%'}}).then(res => {
         this.$message.success('删除成功')
-        this.updateData()
+        this.getData()
       })
-    },
-    updateData () {
-      this.$refs.list.updateData()
-    },
-    async getParent (item) {
-      let res = await this.$db.find('shopCategory', item.category_id, null, 0)
-      item.category_name = res.name ? res.name : ''
-    },
-    bathAddMathing () {
-      if (this.marketingVal[0]) {
-        this.isShowMarketing = true
-      } else {
-        this.$message.warning('请选择商品')
-      }
-    },
-    handleSelectionChange (val) {
-      this.marketingVal = val
     }
   },
-  created () {}
+  created () {
+    this.getData()
+  }
 }
 </script>
 
-<style>
+<style lang='scss' scoped>
+.custom-tree-node{
+  height: 100px;
+  line-height: 100px;
+  display: block;
+}
 </style>
