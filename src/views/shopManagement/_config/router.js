@@ -13,6 +13,49 @@ const RoleAddEditView = r => require.ensure([], () => r(require('../rbac/role/ch
 const UserIndex = r => require.ensure([], () => r(require('../rbac/user/Index')), 'shopRbac')
 const UserAddEditView = r => require.ensure([], () => r(require('../rbac/user/children/AddEditView')), 'shopRbac')
 const NodeIndex = r => require.ensure([], () => r(require('../rbac/node/Index')), 'shopRbac')
+const OrderIndex = r => require.ensure([], () => r(require('../order/Index')), 'shop')
+const OrderAddEditView = r => require.ensure([], () => r(require('../order/AddEditView')), 'shop')
+
+// 订单管理
+const order = {
+  path: 'order',
+  component: RouterView,
+  meta: {
+    bread: ['订单管理']
+  },
+  children: [
+    {
+      path: '',
+      redirect: 'list'
+    },
+    {
+      path: 'list',
+      name: 'shopOrder',
+      component: OrderIndex,
+      meta: {
+        bread: ['订单列表']
+      }
+    },
+    {
+      path: 'orderAdd',
+      name: 'shopOrderAdd',
+      component: OrderAddEditView,
+      meta: {
+        bread: [{ text: '订单列表', url: 'shopOrder' }, '模拟商城下单']
+      }
+    },
+    {
+      path: 'orderEdit',
+      name: 'shopOrderEdit',
+      component: OrderAddEditView,
+      meta: {
+        bread: [{ text: '订单列表', url: 'shopOrder' }, '订单信息更改']
+      }
+    }
+  ]
+}
+
+// rbac
 const rbac = {
   path: 'rbac',
   component: RouterView,
@@ -188,6 +231,7 @@ export default {
     product,
     marketing,
     rbac,
+    order,
     ...marketingCollection
   ]
 }

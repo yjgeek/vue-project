@@ -35,6 +35,14 @@ export default {
           { text: '角色管理', icon: 'role', path: 'role' },
           { text: '节点管理', icon: 'node', path: 'node' }
         ]
+      },
+      {
+        text: '订单管理',
+        icon: 'order',
+        path: 'order',
+        childs: [
+          { text: '订单列表', icon: 'list', path: 'list' }
+        ]
       }
     ]
   }

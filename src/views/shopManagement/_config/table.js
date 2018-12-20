@@ -219,6 +219,48 @@ export default {
           dataType: DATA_TYPE.String
         }
       ]
+    },
+    {
+      name: 'shopOrder', // 订单表
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'order_number',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'pay_type',
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'tracking_number',
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'product_name',
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'status',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'product_id',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'create_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
+        }
+      ]
     }
   ],
   datas: datas
