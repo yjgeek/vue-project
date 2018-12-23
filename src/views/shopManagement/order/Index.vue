@@ -49,7 +49,7 @@
           >
             <template slot-scope="scope">
               <div v-if="item.prop === 'operation'">
-                <el-button size="mini" type="primary" @click="$router.push({name: 'shopOrderEdit', params: {id: scope.row.id}})">编辑</el-button>
+                <el-button size="mini" type="primary" @click="$router.push({name: 'shopOrderEdit', params: {id: scope.row.id, type: 'edit'}})">编辑</el-button>
                 <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
               </div>
               <span v-else>{{scope.row[item.prop]}}</span>
@@ -70,8 +70,8 @@ export default {
       columns: [
         {type: 'index', label: '编号', width: 50},
         {prop: 'product_name', label: '产品名称'},
-        {prop: 'order_number', width: 100, label: '订单号'},
-        {prop: 'tracking_number', width: 100, label: '快递单号'},
+        {prop: 'order_number', width: 140, label: '订单号'},
+        {prop: 'tracking_number', width: 140, label: '快递单号'},
         {prop: 'pay_type', label: '支行方式'},
         {prop: 'status_name', label: '订单状态'},
         {prop: 'create_time', width: 160, label: '创建时间'},
@@ -94,7 +94,11 @@ export default {
       if (params.name) {
         params.name = { like: params.name + '%' }
       }
+      let keys = {1: '代付款', 2: '已付款', 3: '代发货', 4: '已发货', 5: '申请售后', 6: '已完成'}
       this.$db.page('shopOrder', params).then(res => {
+        res.data.map(item => {
+          item.status_name = keys[item.status] || '未知状态'
+        })
         cb(res)
       })
     },
