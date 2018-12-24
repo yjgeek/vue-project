@@ -13,6 +13,7 @@
   "dependencies": {
     "@antv/data-set": "^0.10.1",
     "@antv/g2": "^3.3.4",
+    "@zfowed/utils": "^1.0.16",
     "axios": "^0.17.1",
     "element-ui": "^2.0.9",
     "jsstore": "^2.8.2",

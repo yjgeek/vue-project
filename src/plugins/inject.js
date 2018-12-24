@@ -1,4 +1,5 @@
 import api from './api'
+import Storage from '@zfowed/utils/dist/Storage'
 import * as config from 'config/index'
 import mixin from './mixin'
 import directive from './directive'
@@ -6,10 +7,12 @@ import db from './db'
 import globalConfigs from 'src/globalConfigs'
 import components from 'components/index'
 import {Mock} from 'utils/index'
+
 export default {
   install: (Vue) => {
     Vue.use(components)
     document.title = config.TITLE
+    Vue.prototype.$storage = new Storage()
     Vue.prototype.$config = config
     Vue.prototype.$api = api
     Vue.prototype.$auth = localStorage.auth ? JSON.parse(localStorage.auth) : []

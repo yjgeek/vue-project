@@ -74,7 +74,7 @@ export default {
         product_id: '',
         product_name: '',
         order_number: '',
-        pay_type: '微信支付',
+        pay_type: '',
         buy_number: '',
         status: 1,
         attr: {}
@@ -110,6 +110,7 @@ export default {
       this.form['order_number'] = '' + new Date().getTime()
       this.$refs['form'].validate(valid => {
         if (valid) {
+          this.form['product'] = this.product
           this.$emit('submit', this.form, (bool) => {
             if (bool) {
               this.active += 1
@@ -122,15 +123,15 @@ export default {
     },
     async handlePay () {
       let id = this.id
-
-      if (this.form.order_number) {
-        const res = await this.$db.find('shopOrder', {order_number: this.form.order_number})
+      const {order_number: orderNumber, pay_type: payType} = this.form
+      if (orderNumber) {
+        const res = await this.$db.find('shopOrder', {order_number: orderNumber})
         id = res.id
       } else if (!id) {
         this.$router.push({name: 'shopOrder'})
         return false
       }
-      this.$db.update('shopOrder', {id, status: 2}).then(() => {
+      this.$db.update('shopOrder', {id, status: 2, pay_type: payType}).then(() => {
         this.$message.success('支付成功!')
         this.$router.push({name: 'shopOrder'})
       })
