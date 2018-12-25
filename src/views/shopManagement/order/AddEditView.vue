@@ -1,25 +1,29 @@
 <template>
-<div>
-  <!-- 模拟下单 -->
-  <el-card>
-    <shop-simulated-order v-if="type == 'add' || form.status === 1" :id="form.id" :form="form.status" @submit="submit" />
-    <div v-if="form.status && form.status !== 1" class="product-info">
-      <p><strong>产品名称: </strong>{{form.product_name}}</p>
-      <p><strong>单价: </strong><font style='color: #f54228'>￥{{form.product.sales_price}}</font></p>
-      <p><strong>购买数量: </strong>{{form.buy_number}}</p>
-      <p>
-        <strong>属性: </strong>
-        <span v-for="(item, key) in form.attr" :key="key">{{key}}：{{item}}</span>
-      </p>
-      <p><strong>购买数量: </strong>{{form.buy_number}}</p>
-      <p><strong>订单号: </strong>{{form.order_number}}</p>
-      <p><strong>支付类型: </strong>{{form.pay_type}}</p>
-    </div>
-  </el-card>
-</div>
+<el-row :gutter="15">
+  <el-col v-bind="{lg: 24, xl: 12}" class="mb15">
+    <el-card>
+      <strong slot="header"><span>订单信息</span></strong>
+      <shop-simulated-order :id="form.id" :status="form.status" :params="form" @submit="submit" />
+    </el-card>
+  </el-col>
+  <el-col v-bind="{lg: 24, xl: 12}" v-if="form.status >= 2" class="mb15">
+    <el-card>
+      <strong slot="header"><span>发货信息</span></strong>
+      <shop-ship-order :id="form.id" :status="form.status" :params="form" @submit="submit" />
+    </el-card>
+  </el-col>
+  <el-col v-bind="{lg: 24, xl: 12}" v-if="type === 'after' || form.status >= 5" class="mb15">
+    <el-card>
+      <strong slot="header"><span>申请售后</span></strong>
+      <shop-after-order :id="form.id" :status="form.status" :params="form" @submit="submit" />
+    </el-card>
+  </el-col>
+</el-row>
 </template>
 <script>
 import shopSimulatedOrder from './Add'
+import shopShipOrder from './Ship'
+import shopAfterOrder from './After'
 export default {
   name: 'shop-order-add-edit-view',
   data () {
@@ -35,26 +39,47 @@ export default {
       form: {}
     }
   },
+  computed: {
+    product () {
+      return this.form.product || {}
+    }
+  },
   methods: {
     submit (params, callback) {
       let key = params.id ? 'update' : 'add'
       let bool = true
       this.$db[key]('shopOrder', params).then(res => {
+        if (key !== 'add') {
+          this.updateData(params.id)
+        }
         callback && callback(bool)
       }).catch(() => {
         bool = false
         callback && callback(bool)
       })
+    },
+    updateData (id) {
+      this.$db.find('shopOrder', { id }).then(res => {
+        this.$message.success('更新成功!')
+        this.form = res
+      })
     }
   },
   components: {
-    shopSimulatedOrder
+    shopSimulatedOrder,
+    shopShipOrder,
+    shopAfterOrder
   },
   created () {
-    let res = this.$storage.getItem('orderDetail')
-    if (!res) {
+    let res = this.$route.params
+    if (JSON.stringify(res) === '{}') {
+      res = this.$storage.getItem('orderDetail')
+      if (!res) {
+        this.$storage.setItem('orderDetail', this.$route.params)
+        res = this.$route.params
+      }
+    } else {
       this.$storage.setItem('orderDetail', this.$route.params)
-      res = this.$route.params
     }
     let {type, id} = res
     if (type) {

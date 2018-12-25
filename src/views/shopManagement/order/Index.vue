@@ -21,14 +21,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-select placeholder="请选择订单状态" v-model="filterParams.status">
+          <el-select v-model="filterParams.status" placeholder="请选择订单状态">
             <el-option value="">请选择订单状态</el-option>
-            <el-option :value="1">代付款</el-option>
-            <el-option :value="2">已付款</el-option>
-            <el-option :value="3">代发货</el-option>
-            <el-option :value="4">已发货</el-option>
-            <el-option :value="5">申请售后</el-option>
-            <el-option :value="6">已完成</el-option>
+            <el-option v-for="(item, key) in statusKeys" :key="key" :label="item" :value="Number(key)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间">
@@ -50,6 +45,7 @@
             <template slot-scope="scope">
               <div v-if="item.prop === 'operation'">
                 <el-button size="mini" type="primary" @click="$router.push({name: 'shopOrderEdit', params: {id: scope.row.id, type: 'edit'}})">编辑</el-button>
+                <el-button size="mini" type="primary" v-if="scope.row.status === 4" @click="$router.push({name: 'shopOrderEdit', params: {id: scope.row.id, type: 'after'}})">申请售后</el-button>
                 <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
               </div>
               <span v-else>{{scope.row[item.prop]}}</span>
@@ -67,16 +63,17 @@ export default {
   name: 'shop-order-list',
   data () {
     return {
+      statusKeys: {1: '待付款', 2: '待发货', 3: '待收货', 4: '已完成', 5: '申请售后', 6: '售后完成'},
       columns: [
         {type: 'index', label: '编号', width: 50},
         {prop: 'product_name', label: '产品名称'},
         {prop: 'order_number', width: 140, label: '订单号'},
         {prop: 'tracking_number', width: 140, label: '快递单号'},
-        {prop: 'pay_type', label: '支行方式'},
+        {prop: 'pay_type', label: '支付方式'},
         {prop: 'status_name', label: '订单状态'},
         {prop: 'create_time', width: 160, label: '创建时间'},
         {prop: 'update_time', width: 160, label: '更改时间'},
-        {prop: 'operation', width: 200, label: '操作'}
+        {prop: 'operation', width: 250, label: '操作'}
       ],
       filterParams: {
         order_number: '',
@@ -91,13 +88,12 @@ export default {
   methods: {
     getData (params, cb) {
       params = JSON.parse(JSON.stringify(params))
-      if (params.name) {
-        params.name = { like: params.name + '%' }
+      if (params.create_time[0]) {
+        params.create_time = {'-': {low: new Date(params.create_time[0]), high: new Date(params.create_time[1])}}
       }
-      let keys = {1: '代付款', 2: '已付款', 3: '代发货', 4: '已发货', 5: '申请售后', 6: '已完成'}
       this.$db.page('shopOrder', params).then(res => {
         res.data.map(item => {
-          item.status_name = keys[item.status] || '未知状态'
+          item.status_name = this.statusKeys[item.status] || '未知状态'
         })
         cb(res)
       })
@@ -110,9 +106,6 @@ export default {
     },
     updateData () {
       this.$refs.list.updateData()
-    },
-    handleStatus ({id, status}) {
-      this.$db.update('shopOrder', {id, status})
     }
   },
   created () {}

@@ -93,7 +93,7 @@ export default {
     getData (params, cb) {
       params = JSON.parse(JSON.stringify(params))
       if (params.create_time[0]) {
-        params.create_time = {'-': {low: params.create_time[0], high: params.create_time[1]}}
+        params.create_time = {'-': {low: new Date(params.create_time[0]), high: new Date(params.create_time[1])}}
       }
       if (params.end_time[0]) {
         params.end_time = {'-': {low: new Date(params.end_time[0]), high: new Date(params.end_time[1])}}

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="status<=1">
   <el-steps style="width: 50%; margin: 20px auto 50px" :active="stepActive" process-status='success' finish-status="success">
     <el-step title="填写订单信息"></el-step>
     <el-step title="完成支付"></el-step>
@@ -41,13 +41,28 @@
       <div class="mb15">
         <img class="qr" :src="paySrc" alt="">
       </div>
-      <el-button class="mb15" type="primary" @click="handlePay">点我付款</el-button>
     </el-row>
   </el-form>
   <div style="text-align: center">
-    <el-button type="danger" @click="$router.push({name: 'shopOrder'})">取消</el-button>
-    <el-button type="primary" @click="submit">提交</el-button>
+    <el-button type="danger" @click="$router.push({name: 'shopOrder'})">{{stepActive === 1 ? '取消付款' : '取消'}}</el-button>
+    <el-button type="primary" @click="submit">{{stepActive === 1 ? '付款' : '提交'}}</el-button>
   </div>
+</div>
+<div v-else class="product-info">
+  <p><strong>产品名称: </strong>{{params.product_name}}</p>
+  <p>
+    <strong>单价: </strong><font style='color: #f54228'>￥{{productOrder.sales_price}}元</font>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <strong>总价: </strong><font style='color: #f54228'>￥{{productOrder.sales_price * params.buy_number}}元</font>
+  </p>
+  <p><strong>购买数量: </strong>{{params.buy_number}}</p>
+  <p>
+    <strong>属性: </strong>
+    <span v-for="(item, key) in params.attr" :key="key">{{key}}：{{item}}</span>
+  </p>
+  <p><strong>购买数量: </strong>{{params.buy_number}}</p>
+  <p><strong>订单号: </strong>{{params.order_number}}</p>
+  <p><strong>支付类型: </strong>{{params.pay_type}}</p>
 </div>
 </template>
 
@@ -63,7 +78,8 @@ export default {
         return 0
       }
     },
-    id: Number
+    id: Number,
+    params: Object
   },
   data () {
     return {
@@ -103,10 +119,17 @@ export default {
       } else {
         return wx
       }
+    },
+    productOrder () {
+      return this.params.product || {}
     }
   },
   methods: {
     submit () {
+      if (this.stepActive === 1) {
+        this.handlePay()
+        return false
+      }
       this.form['order_number'] = '' + new Date().getTime()
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -124,6 +147,10 @@ export default {
     async handlePay () {
       let id = this.id
       const {order_number: orderNumber, pay_type: payType} = this.form
+      if (!payType) {
+        this.$message.warning('请选择支付方式')
+        return false
+      }
       if (orderNumber) {
         const res = await this.$db.find('shopOrder', {order_number: orderNumber})
         id = res.id
@@ -131,10 +158,7 @@ export default {
         this.$router.push({name: 'shopOrder'})
         return false
       }
-      this.$db.update('shopOrder', {id, status: 2, pay_type: payType}).then(() => {
-        this.$message.success('支付成功!')
-        this.$router.push({name: 'shopOrder'})
-      })
+      this.$emit('submit', {id, status: 2, pay_type: payType})
     },
     handleProduct (id) {
       let product = this.products.filter(item => item.id === id)[0]
