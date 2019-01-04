@@ -11,6 +11,6 @@ Vue.component(StrongList.name, StrongList)
 Vue.component(StrongDialog.name, StrongDialog)
 Vue.component(Select.name, Select)
 export default {
-  name: 'shopManagement'
+  name: 'shop-management'
 }
 </script>

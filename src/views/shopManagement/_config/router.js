@@ -16,6 +16,44 @@ const NodeIndex = r => require.ensure([], () => r(require('../rbac/node/Index'))
 const OrderIndex = r => require.ensure([], () => r(require('../order/Index')), 'shop')
 const OrderAddEditView = r => require.ensure([], () => r(require('../order/AddEditView')), 'shop')
 
+const StockIndex = r => require.ensure([], () => r(require('../stock/Index')), 'shop')
+const StockAddEditView = r => require.ensure([], () => r(require('../stock/children/AddEditView')), 'shop')
+
+// 进销存管理
+const invoicing = {
+  path: 'invoicing',
+  component: RouterView,
+  meta: {
+    bread: ['进销存管理']
+  },
+  children: [
+    {
+      path: 'stock',
+      name: 'shopStock',
+      component: StockIndex,
+      meta: {
+        bread: ['库存列表']
+      }
+    },
+    {
+      path: 'stockAdd',
+      name: 'shopStockAdd',
+      component: StockAddEditView,
+      meta: {
+        bread: [{ text: '库存列表', url: 'shopStock' }, '添加库存']
+      }
+    },
+    {
+      path: 'stockEdit',
+      name: 'shopStockEdit',
+      component: StockAddEditView,
+      meta: {
+        bread: [{ text: '库存列表', url: 'shopStock' }, '更改库存']
+      }
+    }
+  ]
+}
+
 // 订单管理
 const order = {
   path: 'order',
@@ -232,6 +270,7 @@ export default {
     marketing,
     rbac,
     order,
+    invoicing,
     ...marketingCollection
   ]
 }

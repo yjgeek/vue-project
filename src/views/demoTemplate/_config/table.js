@@ -3,32 +3,7 @@ import { Mock } from 'utils/index'
 export default {
   schemas: [
     {
-      name: 'product',
-      columns: [
-        {
-          name: 'id',
-          primaryKey: true,
-          autoIncrement: true
-        },
-        {
-          name: 'itemName',
-          notNull: true,
-          dataType: DATA_TYPE.String
-        },
-        {
-          name: 'price',
-          notNull: true,
-          dataType: DATA_TYPE.Number
-        },
-        {
-          name: 'quantity',
-          notNull: true,
-          dataType: DATA_TYPE.Number
-        }
-      ]
-    },
-    {
-      name: 'user',
+      name: 'demo_user',
       columns: [
         {
           name: 'id',

@@ -261,6 +261,130 @@ export default {
           dataType: DATA_TYPE.DateTime
         }
       ]
+    },
+    {
+      name: 'shopGoodStock', // 商品库存列表
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name', // 商品名称
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'retail_price', // 零售价
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'unit', // 单位
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'status', // 商品状态
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'stock_category_id',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'create_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
+        }
+      ]
+    },
+    {
+      name: 'shopSupplier', // 供应商
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'Arrears', // 应付欠款
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'status',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'create_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
+        }
+      ]
+    },
+    {
+      name: 'shopSupplier', // 供应商
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'Arrears', // 应付欠款
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'status',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'create_time',
+          notNull: true,
+          dataType: DATA_TYPE.DateTime
+        }
+      ]
+    },
+    {
+      name: 'shopBankAccount', // 银行账户
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+          autoIncrement: true
+        },
+        {
+          name: 'name',
+          notNull: true,
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'company', // 开户银行
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'balance',
+          dataType: DATA_TYPE.Number
+        },
+        {
+          name: 'status',
+          notNull: true,
+          dataType: DATA_TYPE.Number
+        }
+      ]
     }
   ],
   datas: datas
