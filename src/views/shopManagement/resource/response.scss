@@ -1,0 +1,19 @@
+input:focus {
+  outline: none;
+}
+.show-i-768 {
+  display: none;
+}
+
+.hide-i-768 {
+  display: block;
+}
+
+@media screen and (max-width: 768px) {
+  .hide-i-768 {
+    display: none;
+  }
+  .show-i-768 {
+    display: block;
+  }
+}

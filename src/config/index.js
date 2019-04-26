@@ -15,8 +15,10 @@ export const API_PREFIX = apiPrefix
 export const AXIOS_DEFAULT_CONFIG = {
   timeout: 6000,
   maxContentLength: 2000,
-  headers: {},
-  withCredentials: true
+  headers: {
+    Authorization: '8dbd9c4175ad474e87de00f94ba50bc5155546679738413480014324'
+  },
+  withCredentials: false
 }
 
 // 默认的表单布局

@@ -4,7 +4,9 @@ import { API_PREFIX, API_DEFAULT_CONFIG } from 'config/index'
 export function requestSuccessFunc (requestObj) {
   let api = API_DEFAULT_CONFIG.mock ? API_DEFAULT_CONFIG.mockBaseURL + requestObj.url : API_PREFIX + requestObj.url
   if (requestObj.isMock === false) {
-    api = API_PREFIX + requestObj.url
+    if (!/^http/.test(api)) {
+      api = API_PREFIX + requestObj.url
+    }
   }
   requestObj.url = api
   return requestObj

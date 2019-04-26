@@ -17,9 +17,14 @@ export default {
         icon: 'product',
         path: 'product',
         childs: [
-          {text: '商品列表', icon: 'list', path: 'good'},
-          {text: '分类列表', icon: 'category', path: 'category'}
+          { text: '商品列表', icon: 'list', path: 'good' },
+          { text: '分类列表', icon: 'category', path: 'category' }
         ]
+      },
+      {
+        text: '资源管理',
+        icon: 'resource',
+        path: 'resource'
       }
     ]
   }
