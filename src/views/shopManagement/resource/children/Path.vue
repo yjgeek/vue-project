@@ -40,13 +40,13 @@ export default {
 <style lang="scss" scoped>
   @import '../response.scss';
   .path-list{
-    margin-top: 10px;
     .pc{
       span{
         cursor: pointer;
         font-size: 14px;
         font-weight: 600;
         text-decoration: none;
+        user-select: none;
         transition: color .2s cubic-bezier(.645,.045,.355,1);
         color: #303133;
         &:last-child{
@@ -64,6 +64,7 @@ export default {
     .mobile{
       span{
         cursor: pointer;
+        user-select: none;
       }
     }
   }

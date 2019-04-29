@@ -11,7 +11,7 @@ input:focus {
 
 @media screen and (max-width: 768px) {
   .hide-i-768 {
-    display: none;
+    display: none !important;
   }
   .show-i-768 {
     display: block;

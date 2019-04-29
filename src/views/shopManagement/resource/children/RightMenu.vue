@@ -6,8 +6,8 @@
       </div>
       <div class="children" v-if="item.children">
         <template v-for="child in item.children">
-          <div class="menu" :key="child.key" v-if="child.key === 'middle_url' && middleUrl" @click="handleClick(item)">{{child.text}}</div>
-          <div class="menu" :key="child.key" @click="handleClick(item)" v-else-if="child.key !== 'middle_url'">{{child.text}}</div>
+          <div class="menu" :key="child.key" v-if="child.key === 'middle_url' && middleUrl" @click.prevent="handleClick(child)">{{child.text}}</div>
+          <div class="menu" :key="child.key" @click.prevent="handleClick(child)" v-else-if="child.key !== 'middle_url'">{{child.text}}</div>
         </template>
       </div>
     </div>
@@ -33,7 +33,7 @@ export default {
         { key: "rename", text: "重命名" },
         { key: "move", text: "移动" },
         { key: "delete", text: "删除" },
-        { key: "rotation", text: "旋转" },
+        // { key: "rotation", text: "旋转" },
         {
           key: "copy-link",
           text: "复制链接",

@@ -2,12 +2,18 @@
   <div>
     <div class="operating">
       <div class="left">
-        <span @click="isUpload=true">上传资源</span>
-        <span @click="addDir">新建文件夹</span>
-        <span>批量删除</span>
-        <span>全选</span>
+        <template v-if="!isMove">
+          <span @click="isUpload=true">上传资源</span>
+          <span @click="addDir">新建文件夹</span>
+          <span class="hide-i-768" @click="removeResource(1)">批量删除</span>
+          <span class="hide-i-768" @click="handleAllSelect">{{isAllSelect ? '取消全选' : '全选'}}</span>
+        </template>
+        <template v-else>
+          <span @click="handleMove">确定</span>
+          <span @click="isMove=false;moveId=null;">取消</span>
+        </template>
       </div>
-      <div class="right hide-i-768">
+      <div class="right hide-i-768" v-if="!isMove">
         <div class="search">
           <input
             type="text"
@@ -18,183 +24,44 @@
         </div>
       </div>
     </div>
-    <resource-path @change="getListData" :sources="pathList" :active="filterParams.parent_id"/>
+    <resource-path style="margin-top: 10px;" @change="getListData" :sources="pathList" :active="filterParams.parent_id"/>
     <div class="image-list">
       <resource-item
         v-for="item in resourceList"
         :data="item"
         :key="item.id"
-        @change="getListData"
+        @next="getListData"
         @changeName="handleChangeName"
-        @opearting="handleOpearting"
         @previewImage="handlePreviewImage"
+        @onSelect="handleSelect"
       />
     </div>
     <resource-right-menu :sources="resourceList" @change="handleRightChange"/>
     <resource-preview-image :sources="previewImageList" v-if="isPreview"  @close="isPreview=false"/>
     <resource-upload
-      action="http://127.0.0.1:4000/api/file/upload"
+      action="http://192.168.1.106:4000/api/file/upload"
       :headers="headers"
-      :visible="isUpload"
+      v-if="isUpload"
       @close="isUpload=false; getListData(filterParams.parent_id);"
       :onSuccess="addResource"
     />
-    <input type="text" id="copy-url" :value="url">
+    <input type="text" id="copy-url" placeholder="这个是来复制url的" >
   </div>
 </template>
 
 <script>
-import ResourceItem from "./children/Item";
-import ResourcePath from "./children/Path";
-import ResourceRightMenu from "./children/RightMenu";
-import ResourceUpload from "./children/Upload";
-import ResourcePreviewImage from "./children/PreviewImage";
-import folderIcon from "./icon/folder.png";
+import mixin from './mixin'
+import ResourceSelectDialog from './children/SelectDialog'
 export default {
   name: "resource-list",
-  data() {
-    return {
-      isUpload: false,
-      isPreview: false,
-      expandList: {},
-      resourceList: [],
-      pathList: [],
-      url: "asdfasdfasdf",
-      headers: {
-        Authorization: "8dbd9c4175ad474e87de00f94ba50bc5155546679738413480014324"
-      },
-      previewImageList: [],
-      filterParams: {
-        keyword: "",
-        page: 1,
-        parent_id: 0
-      }
-    };
+  mixins: [mixin],
+  components: {
+    ResourceSelectDialog
   },
   methods: {
-    getListData(id) {
-      if (id || id === 0) {
-        this.filterParams.parent_id = id;
-        this.filterParams.page = 1;
-        this.filterParams.keyword = "";
-      }
-      this.$api.shopResourceIndex(this.filterParams).then(res => {
-        const exts = this.expandList;
-        res.list.forEach(item => {
-          const extCover = exts[item.ext];
-          if (item.type === 1) {
-            item.small_url = exts["folder"] || folderIcon;
-          } else if (
-            extCover === "smail_url" ||
-            extCover === "middle_url" ||
-            extCover === "source_url"
-          ) {
-            item.small_url = "http://127.0.0.1:4000/" + item[extCover];
-          } else {
-            item.small_url = "http://127.0.0.1:4000/" + item.small_url;
-          }
-          item.isChange = false;
-        });
-        this.filterParams.page = res.page;
-        this.resourceList = res.list;
-        this.pathList = res.pathList;
-      });
-    },
-    addResource (res, type) {
-      if (res.code === 200) {
-        this.$api.shopResourceAdd({data: res.data, parent_id: this.filterParams.parent_id})
-      } else {
-        alert(res.message)
-      }
-    },
-    addDir () {
-      this.$api.shopResourceAdd({data: {name: '新建文件夹', type: 1}, parent_id: this.filterParams.parent_id}).then(res => {
-        this.getListData(this.filterParams.parent_id);
-      })
-    },
-    removeResource (leave_paths) {
-      this.$api.shopResourceDelete({leave_paths}).then(res => {
-        this.getListData(this.filterParams.parent_id);
-      })
-    },
-    handleOpearting(item) {
-      this.url = item.source_url;
-      const $el = document.getElementById("copy-url");
-      $el.select();
-      const bool = document.execCommand("Copy");
-      console.log(bool);
-    },
-    handleSearch() {
-      this.filterParams.page = 1;
-      this.getListData();
-    },
-    handleChangeName({ id, newName, data }) {
-      if (!newName) {
-        data.isChange = false;
-        this.resourceList = this.resourceList.slice();
-        return false;
-      };
-      this.$api.shopResourceUpdate({ name: newName, id, type: 1 }).then(res => {
-        this.getListData();
-      });
-    },
-    // 旋转图片
-    handleRotationImage ({id, angle}) {
-      angle = Number(angle);
-      if (angle === 360) {
-        angle = 90;
-      } else {
-        angle += 90;
-      }
-      this.$api.shopResourceChangeDirection({id, angle}).then(res => {
-        this.getListData(this.filterParams.parent_id)
-      })
-    },
-    handlePreviewImage (data) {
-      let arr = [{url: `http://127.0.0.1:4000/${data.source_url}?angle=${data.angle}`}];
-      this.resourceList.forEach(item => {
-        if (item.id !== data.id && /^image/.test(item.mime_type)) {
-          arr.push({url: `http://127.0.0.1:4000/${item.source_url}?angle=${item.angle}`})
-        }
-      })
-      this.previewImageList = arr;
-      this.isPreview = true;
-    },
-    // 右键菜单
-    handleRightChange({ type, data, index }) {
-      switch (type) {
-        case "rename":
-          data.isChange = true;
-          this.resourceList.slice();
-          break;
-        case "delete":
-          this.removeResource(data.leave_path);
-          break;
-        case "rotation":
-          this.handleRotationImage(data);
-          break;
-        default:
-          break;
-      }
+    handleSubmit (data) {
+      console.log(data)
     }
-    
-  },
-  components: {
-    ResourceItem,
-    ResourcePath,
-    ResourceRightMenu,
-    ResourceUpload,
-    ResourcePreviewImage
-  },
-  created() {
-    this.$api.shopResourceExpandIndex().then(res => {
-      let obj = {};
-      res.forEach(item => {
-        obj[item.name] = item.cover;
-      });
-      this.expandList = obj;
-      this.getListData();
-    });
   }
 };
 </script>

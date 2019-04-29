@@ -1,29 +1,30 @@
 <template>
-  <div class="resource-item" :data-index="data.id">
-    <div class="cover-wrapper" v-if="data.type === 1" @click="$emit('change', data.id)">
+  <div :class="['resource-item', data.isSelect ? 'resource-item-active' : '']" :data-index="data.id">
+    <div class="cover-wrapper" v-if="data.type === 1" @click="savePath(data.id);$emit('next', data.id)">
       <div class="cover">
-        <img :src="data.small_url" alt="" :style="imageStyle">
+        <img :src="data.cover" alt="" :style="imageStyle">
       </div>
     </div>
     <div class="cover-wrapper" v-else>
       <div class="cover">
-        <img :src="data.small_url" alt="" @click="$emit('previewImage', data)" :style="imageStyle">
+        <img :src="data.cover" :onerror="errorIcon" alt="" @click="$emit('previewImage', data)" :style="imageStyle">
         <div class="video" v-if="isVideo">
           <img :src="playIcon" alt="播放" @click="handlePlay(data)">
         </div>
       </div>
     </div>
-    <div class="title" :title="data.name">
+    <div class="title" :title="data.name" @dblclick="$emit('onSelect', data)">
       <span v-if="!data.isChange">{{data.name}}<template v-if="data.type !== 1">.{{data.ext}}</template></span>
       <div class="rename" v-else>
         <input v-focus type="text" onfocus="this.select()" v-model="name" placeholder="请输入名字" @blur="handleChange(data);name='';">
-      </div>
+      </div> 
     </div>
   </div>
 </template>
 
 <script>
 import playIcon from '../icon/play.svg'
+import errorIcon from '../icon/error.png';
 export default {
   name: 'resource-item',
   props: {
@@ -37,7 +38,9 @@ export default {
   data () {
     return {
       name: this.data.name,
-      playIcon
+      playIcon,
+      // errorIcon,
+      errorIcon: `this.src='${errorIcon}'`
     }
   },
   computed: {
@@ -60,6 +63,9 @@ export default {
     },
     handlePlay (data) {
       window.open('http://127.0.0.1:4000/'+data.source_url)
+    },
+    savePath (id) {
+      sessionStorage.pathId = id;
     }
   },
   watch: {
@@ -75,8 +81,7 @@ export default {
         el.focus();
       }
     }
-  },
-  created () {}
+  }
 }
 </script>
 
@@ -88,6 +93,9 @@ export default {
   background: #fff;
   margin: 0 15px 15px 0;
   position: relative;
+  &-active{
+    box-shadow: 0 0 10px rgba(245, 60, 40, .8);
+  }
   .cover-wrapper{
     width: 100%;
     height: 80px;
@@ -132,6 +140,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
+    user-select: none;
     input{
       border: #f1f1f1;
       width: 100%;

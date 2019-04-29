@@ -5,7 +5,7 @@ export default {
       name: 'resourceIndex',
       method: 'GET',
       desc: '资源列表',
-      path: 'http://127.0.0.1:4000/api/resource/index',
+      path: 'http://192.168.1.106:4000/api/resource/index',
       isMock: false,
       mockPath: '',
       params: {
@@ -19,7 +19,7 @@ export default {
       name: 'resourceAdd',
       method: 'POST',
       desc: '添加资源',
-      path: 'http://127.0.0.1:4000/api/resource/add',
+      path: 'http://192.168.1.106:4000/api/resource/add',
       isMock: false,
       mockPath: '',
       params: {
@@ -31,7 +31,7 @@ export default {
       name: 'resourceUpdate',
       method: 'POST',
       desc: '更改资源',
-      path: 'http://127.0.0.1:4000/api/resource/update',
+      path: 'http://192.168.1.106:4000/api/resource/update',
       isMock: false,
       mockPath: '',
       params: {
@@ -45,7 +45,7 @@ export default {
       name: 'resourceDelete',
       method: 'POST',
       desc: '删除资源',
-      path: 'http://127.0.0.1:4000/api/resource/delete',
+      path: 'http://192.168.1.106:4000/api/resource/delete',
       isMock: false,
       mockPath: '',
       params: {
@@ -56,7 +56,7 @@ export default {
       name: 'resourceChangeDirection',
       method: 'GET',
       desc: '旋转图片',
-      path: 'http://127.0.0.1:4000/api/resource/changeDirection',
+      path: 'http://192.168.1.106:4000/api/resource/changeDirection',
       isMock: false,
       mockPath: '',
       params: {
@@ -68,7 +68,7 @@ export default {
       name: 'resourceExpandIndex',
       method: 'GET',
       desc: '资源扩展列表',
-      path: 'http://127.0.0.1:4000/api/resourceExpansion/index',
+      path: 'http://192.168.1.106:4000/api/resourceExpansion/index',
       isMock: false,
       mockPath: '',
       params: {
