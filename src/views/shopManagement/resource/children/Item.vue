@@ -39,7 +39,6 @@ export default {
     return {
       name: this.data.name,
       playIcon,
-      // errorIcon,
       errorIcon: `this.src='${errorIcon}'`
     }
   },
