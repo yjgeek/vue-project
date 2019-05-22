@@ -2,10 +2,11 @@ export default {
   prefix: 'shop',
   data: [
     {
-      name: 'resourceIndex',
+      name: 'index',
       method: 'GET',
       desc: '资源列表',
-      path: 'http://192.168.1.106:4000/api/resource/index',
+      source: 'resource',
+      path: 'https://resource.yjgeek.com/api/resource/index',
       isMock: false,
       mockPath: '',
       params: {
@@ -16,10 +17,11 @@ export default {
       }
     },
     {
-      name: 'resourceAdd',
+      name: 'add',
       method: 'POST',
       desc: '添加资源',
-      path: 'http://192.168.1.106:4000/api/resource/add',
+      source: 'resource',
+      path: 'https://resource.yjgeek.com/api/resource/add',
       isMock: false,
       mockPath: '',
       params: {
@@ -28,10 +30,11 @@ export default {
       }
     },
     {
-      name: 'resourceUpdate',
+      name: 'update',
       method: 'POST',
       desc: '更改资源',
-      path: 'http://192.168.1.106:4000/api/resource/update',
+      source: 'resource',
+      path: 'https://resource.yjgeek.com/api/resource/update',
       isMock: false,
       mockPath: '',
       params: {
@@ -42,10 +45,11 @@ export default {
       }
     },
     {
-      name: 'resourceDelete',
+      name: 'delete',
       method: 'POST',
       desc: '删除资源',
-      path: 'http://192.168.1.106:4000/api/resource/delete',
+      source: 'resource',
+      path: 'https://resource.yjgeek.com/api/resource/delete',
       isMock: false,
       mockPath: '',
       params: {
@@ -53,22 +57,11 @@ export default {
       }
     },
     {
-      name: 'resourceChangeDirection',
-      method: 'GET',
-      desc: '旋转图片',
-      path: 'http://192.168.1.106:4000/api/resource/changeDirection',
-      isMock: false,
-      mockPath: '',
-      params: {
-        id: null,
-        angle: 0
-      }
-    },
-    {
-      name: 'resourceExpandIndex',
+      name: 'expandIndex',
       method: 'GET',
       desc: '资源扩展列表',
-      path: 'http://192.168.1.106:4000/api/resourceExpansion/index',
+      source: 'resource',
+      path: 'https://resource.yjgeek.com/api/resourceExpansion/index',
       isMock: false,
       mockPath: '',
       params: {

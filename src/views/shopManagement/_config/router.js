@@ -4,7 +4,6 @@ const GoodIndex = r => require.ensure([], () => r(require('../product/Index')), 
 const GoodAddEditView = r => require.ensure([], () => r(require('../product/AddEditView')), 'shop')
 const CategoryIndex = r => require.ensure([], () => r(require('../product/category/Index')), 'shop')
 const CategoryAddEditView = r => require.ensure([], () => r(require('../product/category/children/AddEditView')), 'shop')
-const ResourceIndex = r => require.ensure([], () => r(require('../resource/Index')), 'shop')
 export default {
   path: '/shop',
   name: 'shop',
@@ -13,15 +12,6 @@ export default {
   },
   component: shopManagement,
   children: [
-    {
-      path: 'resource',
-      name: 'resource',
-      component: ResourceIndex,
-      meta: {
-        bread: ['资源列表'],
-        auth: false,
-      }
-    },
     {
       path: 'product',
       name: 'shopProduct',

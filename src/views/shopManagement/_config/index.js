@@ -21,11 +21,6 @@ export default {
           { text: '分类列表', icon: 'category', path: 'category' }
         ]
       },
-      {
-        text: '资源管理',
-        icon: 'resource',
-        path: 'resource'
-      }
     ]
   }
 }

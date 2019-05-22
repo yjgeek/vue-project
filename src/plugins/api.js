@@ -34,7 +34,7 @@ class MakeApi {
     mockBaseURL = ''
   }) {
     config.forEach(api => {
-      const { name, desc, params, method, path, mockPath, isMock } = api
+      const { name, desc, params, method, path, mockPath, isMock, source } = api
       let str = name.substring(0, 1).toUpperCase() + name.substring(1)
       let apiname = `${namespace}${str}` // 驼峰命名空间
       let url = mock ? mockPath || path : path // 控制走 mock 还是线上
@@ -57,7 +57,8 @@ class MakeApi {
             desc,
             baseURL,
             method,
-            isMock
+            isMock,
+            source
           }, outerOptions), _data))
         }
       })

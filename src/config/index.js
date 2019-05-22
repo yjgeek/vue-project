@@ -2,11 +2,12 @@ import globalConfigs from 'src/globalConfigs'
 // 网站标题
 export const TITLE = '后台管理系统'
 
-let apiPrefix = 'http://127.0.0.1:3001/api'
+// let apiPrefix = 'http://127.0.0.1:3001/api'
+let apiPrefix = 'https://api.yjgeek.com/api'
 let isAuth = false
 let mock = true
 if (process.env.NODE_ENV === 'production') { // 生产环境
-  apiPrefix = 'http://39.107.98.143:4001/api'
+  apiPrefix = 'https://api.yjgeek.com/api'
   isAuth = true
 }
 export const API_PREFIX = apiPrefix
@@ -16,9 +17,8 @@ export const AXIOS_DEFAULT_CONFIG = {
   timeout: 6000,
   maxContentLength: 2000,
   headers: {
-    Authorization: '8dbd9c4175ad474e87de00f94ba50bc5155546679738413480014324'
+    
   },
-  withCredentials: false
 }
 
 // 默认的表单布局

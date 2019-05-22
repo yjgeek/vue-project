@@ -3,12 +3,17 @@ import { API_PREFIX, API_DEFAULT_CONFIG } from 'config/index'
 
 export function requestSuccessFunc (requestObj) {
   let api = API_DEFAULT_CONFIG.mock ? API_DEFAULT_CONFIG.mockBaseURL + requestObj.url : API_PREFIX + requestObj.url
-  if (requestObj.isMock === false) {
-    if (!/^http/.test(api)) {
-      api = API_PREFIX + requestObj.url
+  if (requestObj.source === "resource") {
+    requestObj.headers['Authorization'] = 'c91c095894f74f9aa8c200972d762708155851247724413480000000'
+  } else {
+    if (requestObj.isMock === false) {
+      if (!/^https/.test(api)) {
+        api = API_PREFIX + requestObj.url
+        requestObj.withCredentials = true;
+      }
     }
+    requestObj.url = api
   }
-  requestObj.url = api
   return requestObj
 }
 // 请求错误 比如断网
