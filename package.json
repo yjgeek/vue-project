@@ -16,7 +16,7 @@
     "axios": "^0.17.1",
     "element-ui": "^2.0.9",
     "jsstore": "^2.8.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "mavon-editor": "^2.6.17",
     "vue": "^2.5.2",
     "vue-cute-timeline": "^1.2.8",
